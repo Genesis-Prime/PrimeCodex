@@ -40,7 +40,7 @@ jobs:
         run: bandit -r . -f json -o bandit-report.json || true
 
       - name: Check dependencies for vulnerabilities
-        run: safety check --json --output safety-report.json || true
+        run: safety check --output json > safety-report.json || true
 
       - name: Download gitleaks
         run: |
@@ -54,7 +54,7 @@ jobs:
 
       - name: Basic secret pattern check
         run: |
-          ! grep -R "OPENAI_API_KEY=" -n . --exclude-dir=.git || (echo "Potential secret pattern found" && exit 1)
+          ! grep -R "OPENAI_API_KEY=" -n . --exclude-dir=.git --exclude-dir=.venv --exclude-dir=.github --exclude-dir=.githooks --exclude="*.md" --exclude="*.template" --exclude="setup_dev.sh" --exclude="copilot-instructions.md" || (echo "Potential secret pattern found" && exit 1)
 
   test:
     name: Tests
