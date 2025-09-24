@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import yaml
 
@@ -43,7 +43,11 @@ class BraidState:
 class DesireFearBraid:
     """Desire/fear coupled oscillator with simple hysteresis state."""
 
-    def __init__(self, params: Optional[BraidParams] = None, config_path: Optional[str] = None):
+    def __init__(
+        self,
+        params: BraidParams | None = None,
+        config_path: str | None = None,
+    ):
         if config_path:
             self.params = self._load_params_from_config(Path(config_path))
         elif params is not None:
@@ -52,9 +56,9 @@ class DesireFearBraid:
             self.params = BraidParams()
 
         self.state = BraidState()
-        self.history: List[Dict[str, Any]] = []
+        self.history: list[dict[str, Any]] = []
 
-    def step(self, inputs: Dict[str, float]) -> BraidState:
+    def step(self, inputs: dict[str, float]) -> BraidState:
         """Advance the braid dynamics one step using clamped external inputs."""
 
         p, s = self.params, self.state
@@ -72,8 +76,12 @@ class DesireFearBraid:
             threat_level + 0.5 * uncertainty + 0.2 * novelty - 0.7 * safety_evidence
         ) + p.bias_fear
 
-        d_next = s.desire + p.dt * (desire_drive - p.self_decay * s.desire - p.coupling * s.fear)
-        f_next = s.fear + p.dt * (fear_drive - p.self_decay * s.fear - p.coupling * s.desire)
+        d_next = s.desire + p.dt * (
+            desire_drive - p.self_decay * s.desire - p.coupling * s.fear
+        )
+        f_next = s.fear + p.dt * (
+            fear_drive - p.self_decay * s.fear - p.coupling * s.desire
+        )
 
         s.desire = self._clamp(d_next)
         s.fear = self._clamp(f_next)

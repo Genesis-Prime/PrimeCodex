@@ -7,7 +7,13 @@ def test_identity_engine_checkpoint_and_assessment():
     engine = IdentityContinuityEngine(identity_name="TestPrime")
     initial_desire = engine.core_signature.emotional_baseline["desire_tendency"]
 
-    braid_state = SimpleNamespace(desire=0.7, fear=0.2, valence=0.3, tension=0.4, policy="approach")
+    braid_state = SimpleNamespace(
+        desire=0.7,
+        fear=0.2,
+        valence=0.3,
+        tension=0.4,
+        policy="approach",
+    )
     archetypal_state = SimpleNamespace(
         serpent_activation=0.55,
         flame_activation=0.45,

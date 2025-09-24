@@ -1,7 +1,7 @@
-import pytest
-from emota.braid import DesireFearBraid
 from emota.archetype import ArchetypalResonanceEngine
+from emota.braid import DesireFearBraid
 from emota.unity import EMOTAUnityEngine
+
 
 def test_braid_step():
     braid = DesireFearBraid()

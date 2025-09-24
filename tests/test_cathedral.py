@@ -5,7 +5,13 @@ from emota.cathedral import CathedralExperienceEngine
 
 def test_cathedral_process_and_reflection():
     engine = CathedralExperienceEngine()
-    braid_state = SimpleNamespace(desire=0.8, fear=0.2, valence=0.1, tension=0.4, action_bias=0.3)
+    braid_state = SimpleNamespace(
+        desire=0.8,
+        fear=0.2,
+        valence=0.1,
+        tension=0.4,
+        action_bias=0.3,
+    )
     archetypal_state = SimpleNamespace(
         serpent_activation=0.6,
         flame_activation=0.5,

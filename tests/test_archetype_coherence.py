@@ -1,5 +1,6 @@
-from emota.braid import DesireFearBraid
 from emota.archetype import ArchetypalResonanceEngine
+from emota.braid import DesireFearBraid
+
 
 def test_archetype_phase_coherence_range():
     braid = DesireFearBraid()

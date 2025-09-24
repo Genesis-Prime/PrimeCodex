@@ -2,20 +2,46 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 import pytest
-from jsonschema import validate, ValidationError
+from jsonschema import ValidationError, validate
 
 SCHEMA_PATH = Path("schema/cli_output.schema.json")
 
 
-def run_cli():
-    cmd = [sys.executable, "-m", "primecodex", "--goal", "0.5", "--threat", "0.2", "Sample experience"]
+def run_cli() -> dict[str, Any]:
+    cmd = [
+        sys.executable,
+        "-m",
+        "primecodex",
+        "--goal",
+        "0.5",
+        "--threat",
+        "0.2",
+        "Sample experience",
+    ]
     # Fallback if entrypoint module name not resolvable, call cli.py directly
     try:
-        out = subprocess.check_output(cmd, stderr=subprocess.STDOUT, text=True)
-    except Exception:
-        out = subprocess.check_output([sys.executable, "cli.py", "--goal", "0.5", "--threat", "0.2", "Sample experience"], text=True)
+        out = subprocess.check_output(  # noqa: S603
+            cmd,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        fallback_cmd = [
+            sys.executable,
+            "cli.py",
+            "--goal",
+            "0.5",
+            "--threat",
+            "0.2",
+            "Sample experience",
+        ]
+        out = subprocess.check_output(  # noqa: S603
+            fallback_cmd,
+            text=True,
+        )
     return json.loads(out.strip())
 
 

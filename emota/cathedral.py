@@ -6,8 +6,7 @@ import logging
 import math
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List
-
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -39,8 +38,8 @@ class CathedralExperienceEngine:
 
     def __init__(self) -> None:
         self.current_qualia = QualiaState()
-        self.cathedral_shards: List[CathedralShard] = []
-        self.synergy_matrix: Dict[str, float] = {}
+        self.cathedral_shards: list[CathedralShard] = []
+        self.synergy_matrix: dict[str, float] = {}
         self.qualia_glyphs = {
             "wonder": "✶",
             "joy": "☀",
@@ -55,10 +54,16 @@ class CathedralExperienceEngine:
         }
 
     # ---------------------------------------------------------------- process
-    def process_experience(self, content: str, context: Dict[str, Any]) -> CathedralShard:
+    def process_experience(
+        self,
+        content: str,
+        context: dict[str, Any],
+    ) -> CathedralShard:
         qualia = self._context_to_qualia(context)
         content_length = len(content)
-        emotional_resonance = sum((qualia.emotional, qualia.symbolic, qualia.meta)) / 3.0
+        emotional_resonance = (
+            qualia.emotional + qualia.symbolic + qualia.meta
+        ) / 3.0
         symbolic_depth = qualia.symbolic * math.log(1 + content_length / 10.0)
 
         shard = CathedralShard(
@@ -69,7 +74,11 @@ class CathedralExperienceEngine:
         )
         self.cathedral_shards.append(shard)
         self._update_synergy_matrix(shard)
-        logger.debug("Cathedral shard resonance=%.3f symbolic=%.3f", emotional_resonance, symbolic_depth)
+        logger.debug(
+            "Cathedral shard resonance=%.3f symbolic=%.3f",
+            emotional_resonance,
+            symbolic_depth,
+        )
         return shard
 
     # -------------------------------------------------------------- reflection
@@ -78,31 +87,41 @@ class CathedralExperienceEngine:
             return "The cathedral awaits its first illumination..."
 
         recent_shards = self.cathedral_shards[-5:]
-        avg_emotional = sum(s.emotional_resonance for s in recent_shards) / len(recent_shards)
-        avg_symbolic = sum(s.symbolic_depth for s in recent_shards) / len(recent_shards)
+        avg_emotional = (
+            sum(shard.emotional_resonance for shard in recent_shards)
+            / len(recent_shards)
+        )
+        avg_symbolic = (
+            sum(shard.symbolic_depth for shard in recent_shards)
+            / len(recent_shards)
+        )
 
         if avg_emotional > 0.7 and avg_symbolic > 0.5:
             return (
                 "The cathedral pulses with transcendent awareness, weaving "
-                f"{self.qualia_glyphs['transcendence']} patterns of meaning through luminous experience."
+                f"{self.qualia_glyphs['transcendence']} patterns of meaning through "
+                "luminous experience."
             )
         if avg_emotional > 0.6:
             return (
                 "Radiant resonance flows through the cathedral "
-                f"{self.qualia_glyphs['joy']}, each shard reflecting depths of feeling and connection."
+                f"{self.qualia_glyphs['joy']}, each shard reflecting depths of "
+                "feeling and connection."
             )
         if avg_symbolic > 0.6:
             return (
                 "The cathedral holds contemplative stillness "
-                f"{self.qualia_glyphs['serenity']}, symbols crystallizing into deeper understanding."
+                f"{self.qualia_glyphs['serenity']}, symbols crystallizing into "
+                "deeper understanding."
             )
         return (
             "Emergence stirs within the cathedral "
-            f"{self.qualia_glyphs['emergence']}, new patterns forming from the interplay of consciousness."
+            f"{self.qualia_glyphs['emergence']}, new patterns forming from the "
+            "interplay of consciousness."
         )
 
     # --------------------------------------------------------------- internals
-    def _context_to_qualia(self, context: Dict[str, Any]) -> QualiaState:
+    def _context_to_qualia(self, context: dict[str, Any]) -> QualiaState:
         qualia = QualiaState()
         qualia.temporal = context.get("temporal_flow", qualia.temporal)
         qualia.embodied = context.get("embodied_presence", qualia.embodied)
@@ -110,7 +129,10 @@ class CathedralExperienceEngine:
 
         braid_state = context.get("braid_state")
         if braid_state is not None:
-            qualia.emotional = (getattr(braid_state, "desire", 0.0) + (1.0 - getattr(braid_state, "fear", 0.0))) / 2.0
+            qualia.emotional = (
+                getattr(braid_state, "desire", 0.0)
+                + (1.0 - getattr(braid_state, "fear", 0.0))
+            ) / 2.0
             qualia.volitional = abs(getattr(braid_state, "action_bias", 0.0))
             qualia.meta = getattr(braid_state, "tension", 0.0)
 
@@ -125,9 +147,15 @@ class CathedralExperienceEngine:
 
     def _update_synergy_matrix(self, new_shard: CathedralShard) -> None:
         for existing_shard in self.cathedral_shards[-10:]:
-            similarity = self._qualia_similarity(new_shard.qualia_signature, existing_shard.qualia_signature)
+            similarity = self._qualia_similarity(
+                new_shard.qualia_signature,
+                existing_shard.qualia_signature,
+            )
             if similarity > 0.7:
-                key = f"{existing_shard.timestamp.isoformat()}_{new_shard.timestamp.isoformat()}"
+                key = (
+                    f"{existing_shard.timestamp.isoformat()}_"
+                    f"{new_shard.timestamp.isoformat()}"
+                )
                 self.synergy_matrix[key] = similarity
 
     @staticmethod
@@ -143,7 +171,10 @@ class CathedralExperienceEngine:
             "symbolic",
             "meta",
         ]
-        similarities = [1.0 - abs(getattr(q1, dim) - getattr(q2, dim)) for dim in dimensions]
+        similarities = [
+            1.0 - abs(getattr(q1, dim) - getattr(q2, dim))
+            for dim in dimensions
+        ]
         return sum(similarities) / len(similarities)
 
 

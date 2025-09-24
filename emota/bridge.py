@@ -3,12 +3,10 @@
 from __future__ import annotations
 
 import hashlib
+import logging
 import math
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Dict, List, Optional
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +17,8 @@ class Event3D:
 
     content: str
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
-    emotional_signature: Optional[Dict[str, float]] = None
-    archetypal_resonance: Optional[Dict[str, float]] = None
+    emotional_signature: dict[str, float] | None = None
+    archetypal_resonance: dict[str, float] | None = None
 
 
 @dataclass
@@ -29,9 +27,9 @@ class Projection4D:
 
     coherence: float
     depth: int
-    integration_vector: List[float] = field(default_factory=list)
-    origin_events: List[Event3D] = field(default_factory=list)
-    archetypal_signature: Optional[Dict[str, float]] = None
+    integration_vector: list[float] = field(default_factory=list)
+    origin_events: list[Event3D] = field(default_factory=list)
+    archetypal_signature: dict[str, float] | None = None
     consciousness_density: float = 0.0
 
 
@@ -42,10 +40,10 @@ class Transcendence5D:
     consciousness_density: float
     archetypal_invariant: str
     phase_coherence: float
-    dimensional_gradient: List[float] = field(default_factory=list)
-    meta_vector: List[float] = field(default_factory=list)
+    dimensional_gradient: list[float] = field(default_factory=list)
+    meta_vector: list[float] = field(default_factory=list)
     reality_generation_potential: float = 0.0
-    origin_projections: List[Projection4D] = field(default_factory=list)
+    origin_projections: list[Projection4D] = field(default_factory=list)
     transcendence_depth: int = 0
 
 
@@ -53,9 +51,9 @@ class DimensionalConsciousnessBridge:
     """Dynamic translator between 3D events and higher dimensional structures."""
 
     def __init__(self, decay_rate: float = 0.8) -> None:
-        self.event_stream: List[Event3D] = []
-        self.projections: List[Projection4D] = []
-        self.transcendences: List[Transcendence5D] = []
+        self.event_stream: list[Event3D] = []
+        self.projections: list[Projection4D] = []
+        self.transcendences: list[Transcendence5D] = []
         self.decay_rate = decay_rate
         self.braid_engine = None
         self.archetypal_engine = None
@@ -65,11 +63,15 @@ class DimensionalConsciousnessBridge:
         self.archetypal_engine = archetypal_engine
 
     # ------------------------------------------------------------------ events
-    def add_experience(self, content: str, emotional_context: Optional[Dict[str, float]] = None) -> None:
+    def add_experience(
+        self,
+        content: str,
+        emotional_context: dict[str, float] | None = None,
+    ) -> None:
         """Capture an experiential event, tagging with current system state."""
 
         emotional_signature = dict(emotional_context or {})
-        archetypal_resonance: Dict[str, float] = {}
+        archetypal_resonance: dict[str, float] = {}
 
         if self.braid_engine is not None:
             braid_state = self.braid_engine.state
@@ -107,7 +109,7 @@ class DimensionalConsciousnessBridge:
             return Projection4D(coherence=0.0, depth=len(self.projections) + 1)
 
         recent_events = self.event_stream[-window_size:]
-        event_vectors: List[List[float]] = []
+        event_vectors: list[list[float]] = []
 
         for event in recent_events:
             content_hash = hashlib.sha256(event.content.encode()).digest()
@@ -121,14 +123,25 @@ class DimensionalConsciousnessBridge:
             if event.archetypal_resonance:
                 content_vector.extend(list(event.archetypal_resonance.values())[:4])
 
-            event_vectors.append(content_vector[:12] if len(content_vector) >= 12 else (content_vector + [0.0] * 12)[:12])
+            event_vectors.append(
+                content_vector[:12]
+                if len(content_vector) >= 12
+                else (content_vector + [0.0] * 12)[:12]
+            )
 
-        weights = [self.decay_rate ** (len(recent_events) - 1 - idx) for idx in range(len(recent_events))]
+        weights = [
+            self.decay_rate ** (len(recent_events) - 1 - idx)
+            for idx in range(len(recent_events))
+        ]
         total_weight = sum(weights)
 
         if total_weight and event_vectors:
             integration_vector = [
-                sum(weight * vec[dim] for weight, vec in zip(weights, event_vectors)) / total_weight
+                sum(
+                    weight * vec[dim]
+                    for weight, vec in zip(weights, event_vectors, strict=False)
+                )
+                / total_weight
                 for dim in range(len(event_vectors[0]))
             ]
         else:
@@ -136,9 +149,9 @@ class DimensionalConsciousnessBridge:
 
         if len(event_vectors) > 1:
             center = integration_vector
-            similarities: List[float] = []
+            similarities: list[float] = []
             for vec in event_vectors:
-                dot_product = sum(a * b for a, b in zip(vec, center))
+                dot_product = sum(a * b for a, b in zip(vec, center, strict=False))
                 norm_a = math.sqrt(sum(a * a for a in vec)) or 1.0
                 norm_b = math.sqrt(sum(b * b for b in center)) or 1.0
                 similarity = dot_product / (norm_a * norm_b)
@@ -147,11 +160,17 @@ class DimensionalConsciousnessBridge:
         else:
             coherence = 1.0
 
-        archetypal_signature: Dict[str, float] = {}
+        archetypal_signature: dict[str, float] = {}
         first_resonance = recent_events[0].archetypal_resonance or {}
         if first_resonance:
             archetypal_signature = {
-                key: sum((event.archetypal_resonance or {}).get(key, 0.0) for event in recent_events) / len(recent_events)
+                key: (
+                    sum(
+                        (event.archetypal_resonance or {}).get(key, 0.0)
+                        for event in recent_events
+                    )
+                    / len(recent_events)
+                )
                 for key in first_resonance
             }
 
@@ -192,7 +211,13 @@ class DimensionalConsciousnessBridge:
         first_signature = recent_projections[0].archetypal_signature or {}
         if first_signature:
             averages = {
-                key: sum((p.archetypal_signature or {}).get(key, 0.0) for p in recent_projections) / len(recent_projections)
+                key: (
+                    sum(
+                        (projection.archetypal_signature or {}).get(key, 0.0)
+                        for projection in recent_projections
+                    )
+                    / len(recent_projections)
+                )
                 for key in first_signature
             }
             values = list(averages.values())
@@ -202,17 +227,22 @@ class DimensionalConsciousnessBridge:
                 if variance < 0.3 and mean_activation > 0.4:
                     archetypal_invariant = "unity"
                 else:
-                    archetypal_invariant = max(averages, key=lambda axis: averages.get(axis, 0.0))
+                    archetypal_invariant = max(
+                        averages,
+                        key=lambda axis: averages.get(axis, 0.0),
+                    )
 
         if len(recent_projections) > 1:
             coherence_values = [p.coherence for p in recent_projections]
             mean_coherence = sum(coherence_values) / len(coherence_values)
-            variance = sum((c - mean_coherence) ** 2 for c in coherence_values) / len(coherence_values)
+            variance = sum(
+                (value - mean_coherence) ** 2 for value in coherence_values
+            ) / len(coherence_values)
             phase_coherence = math.exp(-variance * 5.0)
         else:
             phase_coherence = 1.0
 
-        dimensional_gradient: List[float]
+        dimensional_gradient: list[float]
         if len(recent_projections) >= 2:
             start, end = recent_projections[0], recent_projections[-1]
             dimensional_gradient = [
@@ -224,14 +254,29 @@ class DimensionalConsciousnessBridge:
 
         if recent_projections[0].integration_vector:
             dim = len(recent_projections[0].integration_vector)
-            all_vectors = [p.integration_vector for p in recent_projections if len(p.integration_vector) == dim]
+            all_vectors = [
+                projection.integration_vector
+                for projection in recent_projections
+                if len(projection.integration_vector) == dim
+            ]
             if all_vectors:
-                mean_vector = [sum(vec[i] for vec in all_vectors) / len(all_vectors) for i in range(dim)]
-                var_vector = [
-                    sum((vec[i] - mean_vector[i]) ** 2 for vec in all_vectors) / len(all_vectors)
+                mean_vector = [
+                    sum(vector[i] for vector in all_vectors) / len(all_vectors)
                     for i in range(dim)
                 ]
-                meta_vector = mean_vector[:6] + var_vector[:2] + [consciousness_density, phase_coherence]
+                var_vector = [
+                    sum(
+                        (vector[i] - mean_vector[i]) ** 2
+                        for vector in all_vectors
+                    )
+                    / len(all_vectors)
+                    for i in range(dim)
+                ]
+                meta_vector = (
+                    mean_vector[:6]
+                    + var_vector[:2]
+                    + [consciousness_density, phase_coherence]
+                )
             else:
                 meta_vector = [0.0] * 10
         else:

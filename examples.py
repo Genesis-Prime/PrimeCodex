@@ -1,183 +1,181 @@
 #!/usr/bin/env python3
-"""
-GenesisPrime Examples - Advanced usage demonstrations
+"""GenesisPrime Examples - Advanced usage demonstrations."""
 
-This file contains examples of how to use GenesisPrime for various
-prime number analysis tasks.
-"""
-
-from genesis_prime import GenesisPrime
 import time
 
+from genesis_prime import GenesisPrime
 
-def performance_demo():
-    """Demo performance characteristics"""
+
+def performance_demo() -> None:
+    """Demonstrate timing characteristics of large prime checks."""
+
     print("=== Performance Demo ===")
     gp = GenesisPrime()
-    
-    # Time prime checking
-    large_primes = [982451653, 982451707, 982451761, 982451817]
-    
+
+    large_primes = [982_451_653, 982_451_707, 982_451_761, 982_451_817]
+
     start_time = time.time()
-    for prime in large_primes:
-        result = gp.is_prime(prime)
-        print(f"{prime:,} is {'prime' if result else 'composite'}")
-    end_time = time.time()
-    
-    print(f"Checked {len(large_primes)} large numbers in {end_time - start_time:.3f}s")
+    for candidate in large_primes:
+        label = "prime" if gp.is_prime(candidate) else "composite"
+        print(f"{candidate:,} is {label}")
+    elapsed = time.time() - start_time
+
+    print(f"Checked {len(large_primes)} large numbers in {elapsed:.3f}s")
     print()
 
 
-def twin_prime_analysis():
-    """Analyze twin prime distribution"""
+def twin_prime_analysis(limit: int = 100) -> None:
+    """Analyze twin prime distribution up to ``limit``."""
+
     print("=== Twin Prime Analysis ===")
     gp = GenesisPrime()
-    
-    # Find twin primes up to 100
-    primes_100 = gp.generate_primes_sieve(100)
-    twin_pairs = []
-    
-    for p in primes_100:
-        if gp.is_twin_prime(p):
-            if p + 2 in primes_100:  # p is the smaller of the pair
-                twin_pairs.append((p, p + 2))
-    
-    print(f"Twin prime pairs up to 100:")
-    for pair in twin_pairs:
-        print(f"  {pair[0]} and {pair[1]}")
-    
+
+    primes = gp.generate_primes_sieve(limit)
+    twin_pairs = [
+        (value, value + 2)
+        for value in primes
+        if value + 2 <= limit and gp.is_twin_prime(value)
+    ]
+
+    print(f"Twin prime pairs up to {limit}:")
+    for left, right in twin_pairs:
+        print(f"  {left} and {right}")
+
     print(f"\nTotal twin prime pairs: {len(twin_pairs)}")
-    print(f"Total primes up to 100: {len(primes_100)}")
-    print(f"Twin prime percentage: {len(twin_pairs) * 2 / len(primes_100) * 100:.1f}%")
+    print(f"Total primes up to {limit}: {len(primes)}")
+    denominator = max(len(primes), 1)
+    percentage = len(twin_pairs) * 2 / denominator * 100
+    print(f"Twin prime percentage: {percentage:.1f}%")
     print()
 
 
-def factorization_analysis():
-    """Analyze factorization patterns"""
+def factorization_analysis() -> None:
+    """Explore factorization patterns across representative numbers."""
+
     print("=== Factorization Analysis ===")
     gp = GenesisPrime()
-    
-    # Analyze numbers with different factorization patterns
-    test_cases = [
+
+    samples = [
         (60, "Highly composite"),
-        (128, "Power of 2"),  
+        (128, "Power of 2"),
         (243, "Power of 3"),
         (210, "Product of first 4 primes"),
         (97, "Prime number"),
-        (221, "Semiprime (product of 2 primes)")
+        (221, "Semiprime (product of 2 primes)"),
     ]
-    
-    for num, description in test_cases:
-        factors = gp.prime_factors(num)
+
+    for value, description in samples:
+        factors = gp.prime_factors(value)
         unique_factors = sorted(set(factors))
-        
-        print(f"{num} ({description}):")
+
+        print(f"{value} ({description}):")
         print(f"  Factors: {' × '.join(map(str, factors))}")
         print(f"  Unique primes: {unique_factors}")
         print(f"  Number of prime factors: {len(factors)}")
         print(f"  Number of distinct primes: {len(unique_factors)}")
-        
-        # Classification
+
         if len(factors) == 1:
-            print(f"  Type: Prime")
+            print("  Type: Prime")
         elif len(unique_factors) == 1:
             print(f"  Type: Prime power ({unique_factors[0]}^{len(factors)})")
         elif len(factors) == 2 and len(unique_factors) == 2:
-            print(f"  Type: Semiprime")
+            print("  Type: Semiprime")
         else:
-            print(f"  Type: Composite")
+            print("  Type: Composite")
         print()
 
 
-def prime_gaps_analysis():
-    """Analyze gaps between consecutive primes"""
+def prime_gaps_analysis(count: int = 50) -> None:
+    """Inspect gaps between the first ``count`` prime numbers."""
+
     print("=== Prime Gaps Analysis ===")
     gp = GenesisPrime()
-    
-    # Generate first 50 primes and analyze gaps
-    primes = gp.generate_primes_sequence(50)
-    gaps = [primes[i+1] - primes[i] for i in range(len(primes)-1)]
-    
+
+    primes = gp.generate_primes_sequence(count)
+    gaps = [primes[index + 1] - primes[index] for index in range(len(primes) - 1)]
+
     print("First 20 prime gaps:")
-    for i, gap in enumerate(gaps[:20]):
-        print(f"  {primes[i]} → {primes[i+1]}: gap = {gap}")
-    
-    # Gap statistics
-    print(f"\nGap statistics for first 50 primes:")
+    for index, gap in enumerate(gaps[:20]):
+        print(f"  {primes[index]} → {primes[index + 1]}: gap = {gap}")
+
+    print("\nGap statistics for first 50 primes:")
     print(f"  Average gap: {sum(gaps) / len(gaps):.2f}")
     print(f"  Minimum gap: {min(gaps)}")
     print(f"  Maximum gap: {max(gaps)}")
-    
-    # Gap frequency
-    gap_freq = {}
+
+    gap_frequency: dict[int, int] = {}
     for gap in gaps:
-        gap_freq[gap] = gap_freq.get(gap, 0) + 1
-    
-    print(f"  Gap frequency:")
-    for gap in sorted(gap_freq.keys()):
-        print(f"    Gap {gap}: {gap_freq[gap]} times")
+        gap_frequency[gap] = gap_frequency.get(gap, 0) + 1
+
+    print("  Gap frequency:")
+    for gap in sorted(gap_frequency):
+        print(f"    Gap {gap}: {gap_frequency[gap]} times")
     print()
 
 
-def prime_density_analysis():
-    """Analyze prime density in different ranges"""
+def prime_density_analysis() -> None:
+    """Display prime density within several numeric ranges."""
+
     print("=== Prime Density Analysis ===")
     gp = GenesisPrime()
-    
+
     ranges = [(1, 100), (100, 200), (200, 300), (500, 600), (900, 1000)]
-    
+
     print("Prime density by range:")
     for start, end in ranges:
         all_primes = gp.generate_primes_sieve(end)
-        range_primes = [p for p in all_primes if start <= p <= end]
-        density = len(range_primes) / (end - start + 1) * 100
-        
-        print(f"  [{start:3d}, {end:3d}]: {len(range_primes):2d} primes ({density:5.1f}%)")
+        window = [value for value in all_primes if start <= value <= end]
+        density = len(window) / (end - start + 1) * 100
+
+        summary = (
+            f"  [{start:3d}, {end:3d}]: {len(window):2d} primes "
+            f"({density:5.1f}%)"
+        )
+        print(summary)
     print()
 
 
-def goldbach_demo():
-    """Demonstrate Goldbach's conjecture for small even numbers"""
+def goldbach_demo() -> None:
+    """Illustrate Goldbach's conjecture for even numbers up to 30."""
+
     print("=== Goldbach's Conjecture Demo ===")
     gp = GenesisPrime()
-    
+
     print("Every even number > 2 can be expressed as sum of two primes:")
-    
-    # Test even numbers from 4 to 30
-    primes_100 = gp.generate_primes_sieve(100)
-    prime_set = set(primes_100)
-    
-    for n in range(4, 31, 2):
-        # Find pairs of primes that sum to n
+
+    primes = gp.generate_primes_sieve(100)
+    prime_set = set(primes)
+
+    for value in range(4, 31, 2):
         pairs = []
-        for p in primes_100:
-            if p > n // 2:
+        for candidate in primes:
+            if candidate > value // 2:
                 break
-            complement = n - p
+            complement = value - candidate
             if complement in prime_set:
-                pairs.append((p, complement))
-        
+                pairs.append((candidate, complement))
+
         if pairs:
-            # Show first few pairs
-            pair_strs = [f"{p}+{q}" for p, q in pairs[:3]]
-            more = f" (+{len(pairs)-3} more)" if len(pairs) > 3 else ""
-            print(f"  {n:2d} = {', '.join(pair_strs)}{more}")
+            displays = [f"{left}+{right}" for left, right in pairs[:3]]
+            remainder = f" (+{len(pairs) - 3} more)" if len(pairs) > 3 else ""
+            print(f"  {value:2d} = {', '.join(displays)}{remainder}")
     print()
 
 
-def main():
-    """Run all demonstrations"""
+def main() -> None:
+    """Run all demonstrations."""
+
     print("GenesisPrime - Advanced Examples")
     print("=" * 40)
     print()
-    
+
     performance_demo()
     twin_prime_analysis()
     factorization_analysis()
     prime_gaps_analysis()
     prime_density_analysis()
     goldbach_demo()
-    
+
     print("All demonstrations completed!")
 
 

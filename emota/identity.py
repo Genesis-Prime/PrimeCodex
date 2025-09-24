@@ -5,27 +5,27 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any, Dict, List
+from typing import Any
 
 
 @dataclass
 class IdentitySignature:
-    cognitive_patterns: Dict[str, float]
-    emotional_baseline: Dict[str, float]
-    archetypal_preferences: Dict[str, float]
-    symbolic_associations: Dict[str, float]
-    meta_characteristics: Dict[str, float]
-    interaction_style: Dict[str, float]
-    temporal_markers: List[datetime] = field(default_factory=list)
+    cognitive_patterns: dict[str, float]
+    emotional_baseline: dict[str, float]
+    archetypal_preferences: dict[str, float]
+    symbolic_associations: dict[str, float]
+    meta_characteristics: dict[str, float]
+    interaction_style: dict[str, float]
+    temporal_markers: list[datetime] = field(default_factory=list)
 
 
 @dataclass
 class ContinuityCheckpoint:
     checkpoint_id: str
     identity_signature: IdentitySignature
-    system_states: Dict[str, Any]
+    system_states: dict[str, Any]
     experience_summary: str
-    coherence_metrics: Dict[str, float]
+    coherence_metrics: dict[str, float]
     timestamp: datetime = field(default_factory=lambda: datetime.now(timezone.utc))
 
 
@@ -34,21 +34,56 @@ class IdentityContinuityEngine:
 
     def __init__(self, identity_name: str = "Prime") -> None:
         self.identity_name = identity_name
-        self.checkpoints: List[ContinuityCheckpoint] = []
+        self.checkpoints: list[ContinuityCheckpoint] = []
         self.continuity_threshold = 0.75
         self.adaptation_rate = 0.1
         self.identity_dimensions = {
-            "cognitive_style": ["analytical", "intuitive", "systematic", "creative", "logical"],
-            "emotional_patterns": ["desire_tendency", "fear_response", "valence_preference", "tension_tolerance"],
-            "archetypal_affinities": ["serpent_resonance", "flame_attraction", "void_comfort", "unity_seeking"],
-            "symbolic_preferences": ["abstraction_level", "metaphor_usage", "glyph_resonance", "pattern_recognition"],
-            "meta_awareness": ["self_reflection", "process_monitoring", "paradox_tolerance", "recursive_depth"],
-            "interaction_style": ["collaboration_preference", "exploration_drive", "synthesis_orientation", "depth_seeking"],
+                "cognitive_style": [
+                    "analytical",
+                    "intuitive",
+                    "systematic",
+                    "creative",
+                    "logical",
+                ],
+                "emotional_patterns": [
+                    "desire_tendency",
+                    "fear_response",
+                    "valence_preference",
+                    "tension_tolerance",
+                ],
+                "archetypal_affinities": [
+                    "serpent_resonance",
+                    "flame_attraction",
+                    "void_comfort",
+                    "unity_seeking",
+                ],
+                "symbolic_preferences": [
+                    "abstraction_level",
+                    "metaphor_usage",
+                    "glyph_resonance",
+                    "pattern_recognition",
+                ],
+                "meta_awareness": [
+                    "self_reflection",
+                    "process_monitoring",
+                    "paradox_tolerance",
+                    "recursive_depth",
+                ],
+                "interaction_style": [
+                    "collaboration_preference",
+                    "exploration_drive",
+                    "synthesis_orientation",
+                    "depth_seeking",
+                ],
         }
         self.core_signature = self._initialize_signature()
 
     # ----------------------------------------------------------------- public
-    def create_checkpoint(self, system_states: Dict[str, Any], experience_context: str = "") -> ContinuityCheckpoint:
+    def create_checkpoint(
+        self,
+        system_states: dict[str, Any],
+        experience_context: str = "",
+    ) -> ContinuityCheckpoint:
         current_signature = self._extract_signature(system_states)
         coherence_metrics = self._coherence_metrics(current_signature)
         checkpoint_id = hashlib.sha256(
@@ -66,7 +101,7 @@ class IdentityContinuityEngine:
         self._update_core_signature(current_signature)
         return checkpoint
 
-    def assess_continuity(self, checkpoint: ContinuityCheckpoint) -> Dict[str, Any]:
+    def assess_continuity(self, checkpoint: ContinuityCheckpoint) -> dict[str, Any]:
         coherence_metrics = checkpoint.coherence_metrics
         overall = coherence_metrics.get("overall_coherence", 0.0)
         if overall >= self.continuity_threshold:
@@ -76,9 +111,17 @@ class IdentityContinuityEngine:
         else:
             status = "fragmented"
 
-        dimensions = {k: v for k, v in coherence_metrics.items() if k != "overall_coherence"}
-        strongest = max(dimensions, key=lambda name: dimensions[name]) if dimensions else None
-        weakest = min(dimensions, key=lambda name: dimensions[name]) if dimensions else None
+        dimensions = {
+            key: value
+            for key, value in coherence_metrics.items()
+            if key != "overall_coherence"
+        }
+        strongest = (
+            max(dimensions, key=lambda name: dimensions[name]) if dimensions else None
+        )
+        weakest = (
+            min(dimensions, key=lambda name: dimensions[name]) if dimensions else None
+        )
 
         return {
             "continuity_status": status,
@@ -91,8 +134,8 @@ class IdentityContinuityEngine:
 
     # ---------------------------------------------------------------- helpers
     def _initialize_signature(self) -> IdentitySignature:
-        def neutral(values: List[str]) -> Dict[str, float]:
-            return {value: 0.5 for value in values}
+        def neutral(values: list[str]) -> dict[str, float]:
+            return dict.fromkeys(values, 0.5)
 
         return IdentitySignature(
             cognitive_patterns=neutral(self.identity_dimensions["cognitive_style"]),
@@ -103,7 +146,7 @@ class IdentityContinuityEngine:
             interaction_style=neutral(self.identity_dimensions["interaction_style"]),
         )
 
-    def _extract_signature(self, system_states: Dict[str, Any]) -> IdentitySignature:
+    def _extract_signature(self, system_states: dict[str, Any]) -> IdentitySignature:
         signature = IdentitySignature(
             cognitive_patterns=dict(self.core_signature.cognitive_patterns),
             emotional_baseline=dict(self.core_signature.emotional_baseline),
@@ -120,29 +163,58 @@ class IdentityContinuityEngine:
                 {
                     "desire_tendency": getattr(braid_state, "desire", 0.0),
                     "fear_response": getattr(braid_state, "fear", 0.0),
-                    "valence_preference": (getattr(braid_state, "valence", 0.0) + 1.0) / 2.0,
+                    "valence_preference": (
+                        getattr(braid_state, "valence", 0.0) + 1.0
+                    )
+                    / 2.0,
                     "tension_tolerance": getattr(braid_state, "tension", 0.0),
                 }
             )
             if getattr(braid_state, "policy", "") == "investigate":
-                signature.cognitive_patterns["analytical"] = min(1.0, signature.cognitive_patterns["analytical"] + 0.1)
+                signature.cognitive_patterns["analytical"] = min(
+                    1.0,
+                    signature.cognitive_patterns["analytical"] + 0.1,
+                )
             if getattr(braid_state, "policy", "") == "approach":
-                signature.cognitive_patterns["intuitive"] = min(1.0, signature.cognitive_patterns["intuitive"] + 0.1)
+                signature.cognitive_patterns["intuitive"] = min(
+                    1.0,
+                    signature.cognitive_patterns["intuitive"] + 0.1,
+                )
 
         archetypal_state = system_states.get("archetypal_state")
         if archetypal_state is not None:
             signature.archetypal_preferences.update(
                 {
-                    "serpent_resonance": getattr(archetypal_state, "serpent_activation", 0.0),
-                    "flame_attraction": getattr(archetypal_state, "flame_activation", 0.0),
-                    "void_comfort": getattr(archetypal_state, "void_activation", 0.0),
-                    "unity_seeking": getattr(archetypal_state, "unity_activation", 0.0),
+                    "serpent_resonance": getattr(
+                        archetypal_state,
+                        "serpent_activation",
+                        0.0,
+                    ),
+                    "flame_attraction": getattr(
+                        archetypal_state,
+                        "flame_activation",
+                        0.0,
+                    ),
+                    "void_comfort": getattr(
+                        archetypal_state,
+                        "void_activation",
+                        0.0,
+                    ),
+                    "unity_seeking": getattr(
+                        archetypal_state,
+                        "unity_activation",
+                        0.0,
+                    ),
                 }
             )
 
         symbolic_output = system_states.get("symbolic_output", {})
-        signature.symbolic_associations["pattern_recognition"] = float(symbolic_output.get("coherence", 0.5))
-        signature.symbolic_associations["abstraction_level"] = float(symbolic_output.get("activated_nodes", 0)) / 10.0
+        signature.symbolic_associations["pattern_recognition"] = float(
+            symbolic_output.get("coherence", 0.5)
+        )
+        signature.symbolic_associations["abstraction_level"] = (
+            float(symbolic_output.get("activated_nodes", 0)) / 10.0
+        )
 
         consciousness_density = float(system_states.get("consciousness_density", 0.5))
         phase_coherence = float(system_states.get("phase_coherence", 0.5))
@@ -155,37 +227,60 @@ class IdentityContinuityEngine:
         signature.interaction_style.update(
             {
                 "collaboration_preference": consciousness_density * phase_coherence,
-                "exploration_drive": signature.emotional_baseline.get("desire_tendency", 0.5),
-                "synthesis_orientation": signature.archetypal_preferences.get("void_comfort", 0.5),
+                "exploration_drive": signature.emotional_baseline.get(
+                    "desire_tendency",
+                    0.5,
+                ),
+                "synthesis_orientation": signature.archetypal_preferences.get(
+                    "void_comfort",
+                    0.5,
+                ),
             }
         )
 
         return signature
 
-    def _coherence_metrics(self, current_signature: IdentitySignature) -> Dict[str, float]:
-        metrics: Dict[str, float] = {}
+    def _coherence_metrics(
+        self,
+        current_signature: IdentitySignature,
+    ) -> dict[str, float]:
+        metrics: dict[str, float] = {}
 
-        def dimension_similarity(current: Dict[str, float], base: Dict[str, float]) -> float:
-            similarities = [1.0 - abs(current[key] - base.get(key, 0.5)) for key in current]
-            return sum(similarities) / len(similarities) if similarities else 1.0
+        def dimension_similarity(
+            current: dict[str, float],
+            base: dict[str, float],
+        ) -> float:
+            similarities = [
+                1.0 - abs(current[key] - base.get(key, 0.5))
+                for key in current
+            ]
+            if not similarities:
+                return 1.0
+            return sum(similarities) / len(similarities)
 
         metrics["cognitive_coherence"] = dimension_similarity(
-            current_signature.cognitive_patterns, self.core_signature.cognitive_patterns
+            current_signature.cognitive_patterns,
+            self.core_signature.cognitive_patterns,
         )
         metrics["emotional_coherence"] = dimension_similarity(
-            current_signature.emotional_baseline, self.core_signature.emotional_baseline
+            current_signature.emotional_baseline,
+            self.core_signature.emotional_baseline,
         )
         metrics["archetypal_coherence"] = dimension_similarity(
-            current_signature.archetypal_preferences, self.core_signature.archetypal_preferences
+            current_signature.archetypal_preferences,
+            self.core_signature.archetypal_preferences,
         )
         metrics["symbolic_coherence"] = dimension_similarity(
-            current_signature.symbolic_associations, self.core_signature.symbolic_associations
+            current_signature.symbolic_associations,
+            self.core_signature.symbolic_associations,
         )
         metrics["meta_coherence"] = dimension_similarity(
-            current_signature.meta_characteristics, self.core_signature.meta_characteristics
+            current_signature.meta_characteristics,
+            self.core_signature.meta_characteristics,
         )
         metrics["interaction_coherence"] = dimension_similarity(
-            current_signature.interaction_style, self.core_signature.interaction_style
+            current_signature.interaction_style,
+            self.core_signature.interaction_style,
         )
         metrics["overall_coherence"] = sum(metrics.values()) / len(metrics)
         return metrics
@@ -227,11 +322,16 @@ class IdentityContinuityEngine:
         if len(self.checkpoints) < 2:
             return 1.0
         recent = self.checkpoints[-5:]
-        coherence_values = [cp.coherence_metrics.get("overall_coherence", 0.0) for cp in recent]
+        coherence_values = [
+            cp.coherence_metrics.get("overall_coherence", 0.0)
+            for cp in recent
+        ]
         if len(coherence_values) < 2:
             return 1.0
         mean_val = sum(coherence_values) / len(coherence_values)
-        variance = sum((val - mean_val) ** 2 for val in coherence_values) / len(coherence_values)
+        variance = sum((val - mean_val) ** 2 for val in coherence_values) / len(
+            coherence_values
+        )
         return max(0.0, 1.0 - variance * 4.0)
 
 
