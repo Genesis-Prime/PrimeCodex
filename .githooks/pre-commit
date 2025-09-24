@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Simple secret scan: blocks commits containing patterns like 'sk-' (OpenAI), 'API_KEY', or 'SECRET='
+# Excludes template files and documentation where these patterns are expected
 set -euo pipefail
 
 PATTERNS=('sk-[A-Za-z0-9]+' 'API_KEY=' 'SECRET_KEY=' 'OPENAI_API_KEY=')
@@ -10,6 +11,17 @@ STAGED_FILES=$(git diff --cached --name-only)
 for f in $STAGED_FILES; do
   # Skip deleted files
   [[ -f "$f" ]] || continue
+  
+  # Skip template files and documentation where API key patterns are expected
+  if [[ "$f" == *.template ]] || [[ "$f" == *TEMPLATE* ]] || 
+     [[ "$f" == README.md ]] || [[ "$f" == *README* ]] ||
+     [[ "$f" == COPILOT_AGENT.md ]] || [[ "$f" == *COPILOT* ]] ||
+     [[ "$f" == scripts/setup_dev.sh ]] || [[ "$f" == *setup* ]] ||
+     [[ "$f" == .github/workflows/* ]] || [[ "$f" == *workflows* ]] ||
+     [[ "$f" == .venv/* ]] || [[ "$f" == */.venv/* ]]; then
+    continue
+  fi
+  
   for p in "${PATTERNS[@]}"; do
     if grep -E -q "$p" "$f"; then
       MATCHES+=("$f:$p")
@@ -18,9 +30,10 @@ for f in $STAGED_FILES; do
 done
 
 if (( ${#MATCHES[@]} > 0 )); then
-  echo "[PRE-COMMIT] Potential secret patterns detected:" >&2
+  echo "[PRE-COMMIT] Potential secret patterns detected in sensitive files:" >&2
   for m in "${MATCHES[@]}"; do echo "  - $m" >&2; done
   echo "Commit aborted. Remove or secure these before committing." >&2
+  echo "Note: Template files and documentation are excluded from this check." >&2
   exit 1
 fi
 

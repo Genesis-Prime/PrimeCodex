@@ -7,6 +7,17 @@ Unified space for two experimental tracks:
 
 Both tracks now live together so the project history remains intact while enabling cross-pollination between algorithmic tooling and affective simulations.
 
+## 🤖 GitHub Copilot Onboarding
+
+New collaborator or AI agent getting started?
+
+1. Run `./scripts/setup_dev.sh` for automated environment setup.
+2. Review [COPILOT_AGENT.md](COPILOT_AGENT.md) for development patterns and guardrails.
+3. Copy `.env.template` to `.env` and fill in secrets (e.g., `OPENAI_API_KEY`) when running live integrations.
+4. Use the issue templates in `.github/ISSUE_TEMPLATE/` to seed bug reports, feature ideas, or Copilot delegations.
+
+**Key reference files**: `COPILOT_AGENT.md`, `CONTRIBUTING.md`, `SECURITY.md`, and the `emota/` engine modules.
+
 ## Repository Layout
 
 | Path | Purpose |
@@ -91,6 +102,16 @@ pytest
 
 - OpenAI integration tests auto-skip when `OPENAI_API_KEY` is absent.
 - GenesisPrime includes demonstration routines in `examples.py` and `quickstart.py` for manual smoke checks.
+
+## Development Checklist
+
+- Add new subsystem stubs under `emota/` with accompanying tests (avoid network I/O).
+- Keep README architecture diagrams in sync with conceptual changes.
+- Run `pytest` before committing; OpenAI integration tests auto-skip without `OPENAI_API_KEY`.
+- Use `examples.py` and `quickstart.py` for GenesisPrime smoke checks.
+- For AI-assisted work, follow patterns in `COPILOT_AGENT.md`.
+- Run `ruff check .` and `ruff format .` (or the project-preferred equivalent) before committing.
+- Enable git hooks via `git config core.hooksPath .githooks` to activate secret scanning.
 
 ## Development Notes
 

@@ -60,12 +60,13 @@ def test_configure_client_uses_explicit_api_key(monkeypatch):
 
     client = openai_connect.configure_client(api_key="explicit-token")
     assert created["api_key"] == "explicit-token"
-    assert client.chat.completions.create() == "real"
+    # Type ignore: dummy create has no required params in test double
+    assert client.chat.completions.create() == "real"  # type: ignore[call-arg]
 
     # The global proxy should now delegate to the dummy client.
-    assert openai_connect.client.chat.completions.create() == "real"
+    assert openai_connect.client.chat.completions.create() == "real"  # type: ignore[call-arg]
 
     # Monkeypatching continues to work even after configuration.
     monkeypatch.setattr(openai_connect.client.chat.completions, "create", lambda: "patched")
-    assert openai_connect.client.chat.completions.create() == "patched"
+    assert openai_connect.client.chat.completions.create() == "patched"  # type: ignore[call-arg]
 

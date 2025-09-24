@@ -1,0 +1,87 @@
+name: Copilot Coding Task
+description: Request assistance from GitHub Copilot Coding Agent
+title: "[Copilot]: "
+labels: ["copilot-task", "ai-assistance"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template to request assistance from GitHub Copilot Coding Agent. Provide clear context for optimal AI assistance.
+
+  - type: dropdown
+    id: task_type
+    attributes:
+      label: Task Type
+      description: What kind of assistance do you need?
+      options:
+        - "Bug Fix"
+        - "Feature Implementation"
+        - "Code Refactoring"
+        - "Test Writing"
+        - "Documentation"
+        - "Security Review"
+        - "Performance Optimization"
+        - "Configuration Update"
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Task Objective
+      description: Clearly describe what you want to accomplish
+      placeholder: "I need to... The goal is to... This should result in..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context & Background
+      description: Provide relevant background information
+      placeholder: |
+        - Related files: [list key files]
+        - Current behavior: [describe current state]
+        - Expected outcome: [describe desired state]
+        - Constraints: [any limitations or requirements]
+
+  - type: textarea
+    id: files
+    attributes:
+      label: Relevant Files
+      description: List the files that are relevant to this task
+      placeholder: |
+        - emota/unity.py (main integration point)
+        - test_emota_unity.py (existing tests)
+        - emota/config.yaml (configuration)
+
+  - type: checkboxes
+    id: requirements
+    attributes:
+      label: Task Requirements
+      description: Check all that apply
+      options:
+        - label: "Must maintain backward compatibility"
+        - label: "Requires new unit tests"
+        - label: "Needs documentation updates"
+        - label: "Must follow existing code patterns"
+        - label: "Security sensitive (handle secrets properly)"
+        - label: "Performance critical"
+        - label: "CLI interface changes required"
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: How will you know the task is complete?
+      placeholder: |
+        - [ ] Feature works as described
+        - [ ] All tests pass
+        - [ ] Documentation updated
+        - [ ] No security issues introduced
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Notes
+      description: Any other information that would help the AI assistant
