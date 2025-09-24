@@ -37,7 +37,8 @@ New collaborator or AI agent getting started?
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .[dev]
+pip install --upgrade pip
+pip install -r requirements.txt
 ```
 
 ### 2. EMOTA Unity Quickstart

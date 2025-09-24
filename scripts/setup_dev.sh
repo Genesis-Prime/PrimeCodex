@@ -36,16 +36,17 @@ pip install --upgrade pip --quiet || echo "⚠️  pip upgrade had issues, conti
 
 # Install dependencies with timeout and fallback
 echo "📚 Installing dependencies..."
-if [ -f "pyproject.toml" ]; then
-    echo "Attempting editable install..."
-    timeout 120 pip install -e .[dev] --quiet || {
-        echo "⚠️  Editable install failed, trying manual dependency installation..."
-        pip install pytest openai python-dotenv PyYAML jsonschema ruff bandit safety --quiet --timeout 60 || echo "⚠️  Some packages may not have installed correctly"
+if [ -f "requirements.txt" ]; then
+    pip install --quiet --timeout 120 -r requirements.txt || {
+        echo "⚠️  requirements install encountered issues, retrying with longer timeout..."
+        pip install --quiet --timeout 300 -r requirements.txt || echo "⚠️  Some runtime packages may be missing"
     }
 else
-    # Fallback to manual installation
-    pip install pytest openai python-dotenv PyYAML jsonschema ruff bandit safety --quiet --timeout 60 || echo "⚠️  Some packages may not have installed correctly"
+    pip install --quiet --timeout 120 openai python-dotenv PyYAML jsonschema || echo "⚠️  Runtime package installation encountered issues"
 fi
+
+# Install developer tooling explicitly
+pip install --quiet --timeout 120 pytest pyright ruff bandit[toml] safety || echo "⚠️  Developer tooling installation encountered issues"
 
 # Enable git hooks for secret scanning
 echo "🔒 Enabling git hooks for secret scanning..."

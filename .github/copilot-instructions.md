@@ -268,8 +268,8 @@ pip install --timeout 600 openai python-dotenv PyYAML jsonschema pytest python-j
 .git/ .githooks/ .github/ .vscode/ emota/ scripts/ schema/
 CHANGELOG.md CODE_OF_CONDUCT.md CONTRIBUTING.md 
 COPILOT_AGENT_ONBOARDING.md LICENSE POST_PURGE_CHECKLIST.md 
-README.md SECURITY.md cli.py emota_unity.py openai_connect.py
-pyproject.toml pyrightconfig.json requirements.txt
+README.md SECURITY.md cli.py openai_connect.py genesis_prime.py
+prime_cli.py pyproject.toml pyrightconfig.json requirements.txt
 test_*.py files
 ```
 
