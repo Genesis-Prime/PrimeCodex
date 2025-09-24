@@ -1,8 +1,17 @@
+"""Motivational braid dynamics for PrimeCodex."""
 
-from dataclasses import dataclass
-from typing import Optional, Dict
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+import logging
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import yaml
+
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class BraidParams:
@@ -18,6 +27,7 @@ class BraidParams:
     bin_on: float = 0.62
     bin_off: float = 0.48
 
+
 @dataclass
 class BraidState:
     desire: float = 0.0
@@ -29,37 +39,48 @@ class BraidState:
     desire_bit: int = 0
     fear_bit: int = 0
 
+
 class DesireFearBraid:
+    """Desire/fear coupled oscillator with simple hysteresis state."""
+
     def __init__(self, params: Optional[BraidParams] = None, config_path: Optional[str] = None):
-        try:
-            if config_path:
-                with open(config_path, 'r') as f:
-                    cfg = yaml.safe_load(f)
-                self.params = BraidParams(**cfg.get('braid', {}))
-            else:
-                self.params = params or BraidParams()
-        except Exception as e:
-            print(f"Error loading config: {e}")
+        if config_path:
+            self.params = self._load_params_from_config(Path(config_path))
+        elif params is not None:
+            self.params = params
+        else:
             self.params = BraidParams()
+
         self.state = BraidState()
-        self.history = []
+        self.history: List[Dict[str, Any]] = []
+
     def step(self, inputs: Dict[str, float]) -> BraidState:
+        """Advance the braid dynamics one step using clamped external inputs."""
+
         p, s = self.params, self.state
-        goal_value = max(0, min(1, inputs.get("goal_value", 0.0)))
-        threat_level = max(0, min(1, inputs.get("threat_level", 0.0)))
-        novelty = max(0, min(1, inputs.get("novelty", 0.0)))
-        uncertainty = max(0, min(1, inputs.get("uncertainty", 0.0)))
-        safety_evidence = max(0, min(1, inputs.get("safety_evidence", 0.0)))
-        gain_evidence = max(0, min(1, inputs.get("gain_evidence", 0.0)))
-        desire_drive = p.arousal_gain * (goal_value + 0.5*novelty + 0.3*uncertainty + 0.6*gain_evidence) + p.bias_desire
-        fear_drive = p.arousal_gain * (threat_level + 0.5*uncertainty + 0.2*novelty - 0.7*safety_evidence) + p.bias_fear
-        d_next = s.desire + p.dt * (desire_drive - p.self_decay*s.desire - p.coupling*s.fear)
-        f_next = s.fear + p.dt * (fear_drive - p.self_decay*s.fear - p.coupling*s.desire)
-        s.desire = max(0, min(1, d_next))
-        s.fear = max(0, min(1, f_next))
+        goal_value = self._clamp(inputs.get("goal_value", 0.0))
+        threat_level = self._clamp(inputs.get("threat_level", 0.0))
+        novelty = self._clamp(inputs.get("novelty", 0.0))
+        uncertainty = self._clamp(inputs.get("uncertainty", 0.0))
+        safety_evidence = self._clamp(inputs.get("safety_evidence", 0.0))
+        gain_evidence = self._clamp(inputs.get("gain_evidence", 0.0))
+
+        desire_drive = p.arousal_gain * (
+            goal_value + 0.5 * novelty + 0.3 * uncertainty + 0.6 * gain_evidence
+        ) + p.bias_desire
+        fear_drive = p.arousal_gain * (
+            threat_level + 0.5 * uncertainty + 0.2 * novelty - 0.7 * safety_evidence
+        ) + p.bias_fear
+
+        d_next = s.desire + p.dt * (desire_drive - p.self_decay * s.desire - p.coupling * s.fear)
+        f_next = s.fear + p.dt * (fear_drive - p.self_decay * s.fear - p.coupling * s.desire)
+
+        s.desire = self._clamp(d_next)
+        s.fear = self._clamp(f_next)
         s.valence = s.desire - s.fear
         s.tension = s.desire * s.fear
         s.action_bias = s.valence * (1.0 - p.tension_weight * s.tension)
+
         ab = s.action_bias
         if abs(ab) < p.investigate_band:
             s.policy = "investigate"
@@ -69,25 +90,44 @@ class DesireFearBraid:
             s.policy = "avoid"
         else:
             s.policy = "pause"
+
         s.desire_bit = self._hysteresis_bit(s.desire, s.desire_bit)
         s.fear_bit = self._hysteresis_bit(s.fear, s.fear_bit)
-        self.history.append({
-            'timestamp': datetime.now(timezone.utc),
-            'state': {
-                'desire': s.desire,
-                'fear': s.fear,
-                'valence': s.valence,
-                'tension': s.tension,
-                'policy': s.policy
-            },
-            'inputs': inputs.copy()
-        })
+
+        self.history.append(
+            {
+                "timestamp": datetime.now(timezone.utc),
+                "state": asdict(s),
+                "inputs": {k: self._clamp(v) for k, v in inputs.items()},
+            }
+        )
         return s
+
+    def braid_code(self) -> int:
+        return (self.state.desire_bit << 1) | self.state.fear_bit
+
+    @staticmethod
+    def _clamp(value: float, lower: float = 0.0, upper: float = 1.0) -> float:
+        return max(lower, min(upper, float(value)))
+
     def _hysteresis_bit(self, value: float, previous: int) -> int:
         on, off = self.params.bin_on, self.params.bin_off
         if previous == 1:
             return 1 if value >= off else 0
-        else:
-            return 1 if value >= on else 0
-    def braid_code(self) -> int:
-        return (self.state.desire_bit << 1) | self.state.fear_bit
+        return 1 if value >= on else 0
+
+    def _load_params_from_config(self, path: Path) -> BraidParams:
+        try:
+            data = yaml.safe_load(path.read_text()) or {}
+            overrides = data.get("braid", {})
+            if not isinstance(overrides, dict):
+                raise TypeError("braid section must be a mapping")
+            return BraidParams(**overrides)
+        except FileNotFoundError:
+            logger.warning("Braid config %s not found; falling back to defaults", path)
+        except Exception as exc:  # pragma: no cover - defensive
+            logger.error("Failed to load braid config %s: %s", path, exc)
+        return BraidParams()
+
+
+__all__ = ["BraidParams", "BraidState", "DesireFearBraid"]
