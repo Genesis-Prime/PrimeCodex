@@ -1,5 +1,7 @@
 # PrimeCodex
 
+> **Status:** `0.2.0-beta` – Experimental, high-volatility build. Interact at your own risk.
+
 Unified space for two experimental tracks:
 
 1. **EMOTA Unity Sandbox** – motivational dynamics, archetypal resonance, and OpenAI integration experiments.
@@ -78,6 +80,14 @@ python prime_cli.py range 10 30
 ```
 
 ## Feature Highlights
+
+### Status & Liability Disclaimer
+
+- **Experimental Beta:** PrimeCodex is distributed as `0.2.0-beta`. Functionality is fluid and subject to rapid change without notice.
+- **No Warranty:** All components are provided "as-is" with no guarantees of fitness for purpose, performance, or availability. You assume full responsibility for outcomes when running any part of the stack.
+- **Use at Your Own Risk:** Execution may produce unpredictable behavior, call external services, or mutate local state. Validate outputs independently before relying on them.
+- **Liability Waiver:** Genesis Prime, contributors, and affiliated AI agents are not liable for any damages, losses, or incidents arising from use, misuse, or inability to use this software.
+- **Security Expectations:** You are solely responsible for safeguarding API keys, data, and infrastructure when integrating PrimeCodex into your environment.
 
 ### EMOTA Unity
 
