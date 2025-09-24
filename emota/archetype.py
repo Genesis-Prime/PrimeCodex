@@ -39,28 +39,33 @@ class ArchetypalResonanceEngine:
             self.state.void_activation = void_factor / total
             self.state.serpent_activation = serpent_factor / total
             self.state.unity_activation = unity_factor / total
-        activations = {
-            ArchetypalPattern.FLAME: self.state.flame_activation,
-            ArchetypalPattern.VOID: self.state.void_activation,
-            ArchetypalPattern.SERPENT: self.state.serpent_activation,
-            ArchetypalPattern.UNITY: self.state.unity_activation
-        }
-        self.state.dominant_pattern = max(activations, key=activations.get)
-        max_activation = max(activations.values())
+        activations = [
+            (ArchetypalPattern.FLAME, self.state.flame_activation),
+            (ArchetypalPattern.VOID, self.state.void_activation),
+            (ArchetypalPattern.SERPENT, self.state.serpent_activation),
+            (ArchetypalPattern.UNITY, self.state.unity_activation),
+        ]
+        dominant_pattern, max_activation = max(activations, key=lambda t: t[1])
+        self.state.dominant_pattern = dominant_pattern
         if max_activation > 0.7:
             self.state.resonance_mode = "dominant"
         elif max_activation < 0.4:
             self.state.resonance_mode = "balanced"
         else:
             self.state.resonance_mode = "flowing"
-        self.state.harmonic_frequency = sum(activations.values()) * braid_state.tension
+        self.state.harmonic_frequency = sum(a for _, a in activations) * braid_state.tension
         if len(self.activation_history) > 1:
-            prev_activations = self.activation_history[-1]
-            coherence_sum = sum(1.0 - abs(activations[pattern] - prev_activations[pattern]) for pattern in activations)
+            prev = self.activation_history[-1]
+            # prev stored as list of tuples as well
+            prev_dict = {p: a for p, a in prev}
+            coherence_sum = 0.0
+            for p, a in activations:
+                prev_a = prev_dict.get(p, a)
+                coherence_sum += 1.0 - abs(a - prev_a)
             self.state.phase_coherence = coherence_sum / len(activations)
         else:
             self.state.phase_coherence = 1.0
-        self.activation_history.append(activations.copy())
+        self.activation_history.append(list(activations))
         if len(self.activation_history) > 50:
             self.activation_history.pop(0)
         return self.state
