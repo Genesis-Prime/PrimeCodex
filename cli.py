@@ -12,6 +12,9 @@ def build_parser():
     p.add_argument("--novelty", type=float, default=0.0, help="Novelty (0-1)")
     p.add_argument("--uncertainty", type=float, default=0.0, help="Uncertainty (0-1)")
     p.add_argument("--config", type=str, default="emota/config.yaml", help="Path to config YAML")
+    p.add_argument("--memory-path", type=str, default=None, help="Persist memory to this JSON file")
+    p.add_argument("--log-level", type=str, default="INFO", help="Logging level (INFO, DEBUG, WARNING)")
+    p.add_argument("--json-logs", action="store_true", help="Emit JSON structured logs")
     p.add_argument("--pretty", action="store_true", help="Pretty-print JSON output")
     return p
 
@@ -24,7 +27,12 @@ def main(argv=None):
         experience = args.experience
     else:
         experience = sys.stdin.read().strip()
-    engine = EMOTAUnityEngine(config_path=args.config)
+    engine = EMOTAUnityEngine(
+        config_path=args.config,
+        memory_path=args.memory_path,
+        log_level=args.log_level,
+        json_logging=args.json_logs
+    )
     inputs = {
         "goal_value": args.goal,
         "threat_level": args.threat,

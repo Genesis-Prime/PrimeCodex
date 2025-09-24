@@ -52,6 +52,16 @@ Output: Unified state snapshot (policy, braid code, archetypal mode)
 ### Configuration
 Runtime parameters load from `emota/config.yaml` by default. Provide an alternate file via CLI `--config` or `EMOTA_CONFIG` (future) or pass `config_path` to `EMOTAUnityEngine`.
 
+### Memory Persistence
+Use `--memory-path state/memory.json` to persist episodic snapshots. The engine auto-loads existing memory and appends new experiences (bounded capacity 1000).
+
+### Logging
+Enable structured JSON logs:
+```bash
+primecodex --json-logs --log-level DEBUG --goal 0.4 "Examining artifact" 2>&1 | jq .
+```
+Standard text logs are used if JSON logging dependency is absent.
+
 ## OpenAI Example
 Located in `openai_connect.py`. Uses `OPENAI_API_KEY`. Tests mock live calls unless key exported.
 
