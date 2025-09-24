@@ -143,7 +143,7 @@ jobs:
         run: |
           # Check that key documentation files exist and have content
           test -s README.md
-          test -s COPILOT_AGENT_ONBOARDING.md
+          test -s COPILOT_AGENT.md
           test -s CONTRIBUTING.md
           test -s SECURITY.md
           echo "All documentation files present and non-empty"
