@@ -1,10 +1,11 @@
 import argparse
 import json
 import sys
+from typing import List, Optional
 from emota.unity import EMOTAUnityEngine
 
 
-def build_parser():
+def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description="PrimeCodex EMOTA Unity CLI")
     p.add_argument("experience", nargs="?", help="Experience text (omit to read stdin)")
     p.add_argument("--goal", type=float, default=0.5, help="Goal value (0-1)")
@@ -19,8 +20,8 @@ def build_parser():
     return p
 
 
-def main(argv=None):
-    argv = argv or sys.argv[1:]
+def main(argv: Optional[List[str]] = None) -> None:
+    argv = argv if argv is not None else sys.argv[1:]
     parser = build_parser()
     args = parser.parse_args(argv)
     if args.experience:

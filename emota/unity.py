@@ -2,10 +2,11 @@ from emota.braid import DesireFearBraid
 from emota.archetype import ArchetypalResonanceEngine
 from emota.memory import MemorySystem
 from emota.logging_utils import configure_logger
+from typing import Any, Dict, Optional
 
 class EMOTAUnityEngine:
-    def __init__(self, identity_name: str = "Prime", config_path: str | None = None,
-                 memory_path: str | None = None, log_level: str = "INFO", json_logging: bool = False):
+    def __init__(self, identity_name: str = "Prime", config_path: Optional[str] = None,
+                 memory_path: Optional[str] = None, log_level: str = "INFO", json_logging: bool = False) -> None:
         self.identity_name = identity_name
         self.braid_engine = DesireFearBraid(config_path=config_path)
         self.archetypal_engine = ArchetypalResonanceEngine()
@@ -13,7 +14,7 @@ class EMOTAUnityEngine:
         self.memory_path = memory_path
         self.memory = MemorySystem.load(memory_path) if memory_path else MemorySystem()
 
-    def snapshot(self, braid_state, archetypal_state, content: str, inputs):  # pragma: no cover trivial
+    def snapshot(self, braid_state: Any, archetypal_state: Any, content: str, inputs: Dict[str, float]) -> Dict[str, Any]:  # pragma: no cover trivial
         return {
             "identity": self.identity_name,
             "content": content,
@@ -37,7 +38,7 @@ class EMOTAUnityEngine:
             }
         }
 
-    def process_experience(self, content: str, environmental_inputs=None):
+    def process_experience(self, content: str, environmental_inputs: Optional[Dict[str, float]] = None) -> Dict[str, Any]:
         environmental_inputs = environmental_inputs or {}
         braid_state = self.braid_engine.step(environmental_inputs)
         archetypal_state = self.archetypal_engine.process_braid_resonance(braid_state)
