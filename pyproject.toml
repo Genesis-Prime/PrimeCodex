@@ -24,6 +24,7 @@ exclude = ["schema*"]
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0.0,<9.0.0",
+  "pyright>=1.1.350",
   "ruff>=0.1.0",
   "bandit[toml]>=1.7.0",
   "safety>=2.0.0"
