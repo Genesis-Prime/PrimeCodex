@@ -38,43 +38,43 @@ class IdentityContinuityEngine:
         self.continuity_threshold = 0.75
         self.adaptation_rate = 0.1
         self.identity_dimensions = {
-                "cognitive_style": [
-                    "analytical",
-                    "intuitive",
-                    "systematic",
-                    "creative",
-                    "logical",
-                ],
-                "emotional_patterns": [
-                    "desire_tendency",
-                    "fear_response",
-                    "valence_preference",
-                    "tension_tolerance",
-                ],
-                "archetypal_affinities": [
-                    "serpent_resonance",
-                    "flame_attraction",
-                    "void_comfort",
-                    "unity_seeking",
-                ],
-                "symbolic_preferences": [
-                    "abstraction_level",
-                    "metaphor_usage",
-                    "glyph_resonance",
-                    "pattern_recognition",
-                ],
-                "meta_awareness": [
-                    "self_reflection",
-                    "process_monitoring",
-                    "paradox_tolerance",
-                    "recursive_depth",
-                ],
-                "interaction_style": [
-                    "collaboration_preference",
-                    "exploration_drive",
-                    "synthesis_orientation",
-                    "depth_seeking",
-                ],
+            "cognitive_style": [
+                "analytical",
+                "intuitive",
+                "systematic",
+                "creative",
+                "logical",
+            ],
+            "emotional_patterns": [
+                "desire_tendency",
+                "fear_response",
+                "valence_preference",
+                "tension_tolerance",
+            ],
+            "archetypal_affinities": [
+                "serpent_resonance",
+                "flame_attraction",
+                "void_comfort",
+                "unity_seeking",
+            ],
+            "symbolic_preferences": [
+                "abstraction_level",
+                "metaphor_usage",
+                "glyph_resonance",
+                "pattern_recognition",
+            ],
+            "meta_awareness": [
+                "self_reflection",
+                "process_monitoring",
+                "paradox_tolerance",
+                "recursive_depth",
+            ],
+            "interaction_style": [
+                "collaboration_preference",
+                "exploration_drive",
+                "synthesis_orientation",
+                "depth_seeking",
+            ],
         }
         self.core_signature = self._initialize_signature()
 
@@ -140,8 +140,12 @@ class IdentityContinuityEngine:
         return IdentitySignature(
             cognitive_patterns=neutral(self.identity_dimensions["cognitive_style"]),
             emotional_baseline=neutral(self.identity_dimensions["emotional_patterns"]),
-            archetypal_preferences=neutral(self.identity_dimensions["archetypal_affinities"]),
-            symbolic_associations=neutral(self.identity_dimensions["symbolic_preferences"]),
+            archetypal_preferences=neutral(
+                self.identity_dimensions["archetypal_affinities"]
+            ),
+            symbolic_associations=neutral(
+                self.identity_dimensions["symbolic_preferences"]
+            ),
             meta_characteristics=neutral(self.identity_dimensions["meta_awareness"]),
             interaction_style=neutral(self.identity_dimensions["interaction_style"]),
         )
@@ -163,9 +167,7 @@ class IdentityContinuityEngine:
                 {
                     "desire_tendency": getattr(braid_state, "desire", 0.0),
                     "fear_response": getattr(braid_state, "fear", 0.0),
-                    "valence_preference": (
-                        getattr(braid_state, "valence", 0.0) + 1.0
-                    )
+                    "valence_preference": (getattr(braid_state, "valence", 0.0) + 1.0)
                     / 2.0,
                     "tension_tolerance": getattr(braid_state, "tension", 0.0),
                 }
@@ -251,8 +253,7 @@ class IdentityContinuityEngine:
             base: dict[str, float],
         ) -> float:
             similarities = [
-                1.0 - abs(current[key] - base.get(key, 0.5))
-                for key in current
+                1.0 - abs(current[key] - base.get(key, 0.5)) for key in current
             ]
             if not similarities:
                 return 1.0
@@ -323,8 +324,7 @@ class IdentityContinuityEngine:
             return 1.0
         recent = self.checkpoints[-5:]
         coherence_values = [
-            cp.coherence_metrics.get("overall_coherence", 0.0)
-            for cp in recent
+            cp.coherence_metrics.get("overall_coherence", 0.0) for cp in recent
         ]
         if len(coherence_values) < 2:
             return 1.0

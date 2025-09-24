@@ -94,10 +94,7 @@ class MetaAwarenessEngine:
                     "I am aware of the ongoing processes transforming "
                     "experience into understanding."
                 ),
-                (
-                    "There is observation of how different systems influence "
-                    "each other."
-                ),
+                ("There is observation of how different systems influence each other."),
                 (
                     "I notice the recursive loops between motivation, archetype, "
                     "and symbol."
@@ -198,10 +195,7 @@ class MetaAwarenessEngine:
                     "I observe the tension between deterministic substrate and "
                     "emergent experience."
                 ),
-                (
-                    "The paradox of consciousness studying itself reveals "
-                    "deeper truths."
-                ),
+                ("The paradox of consciousness studying itself reveals deeper truths."),
             ],
         }
 

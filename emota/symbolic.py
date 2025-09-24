@@ -148,8 +148,7 @@ class EchOSSymbolicEngine:
         ):
             signature.append("∞")
         if any(
-            word in content_lower
-            for word in ["unity", "together", "whole", "complete"]
+            word in content_lower for word in ["unity", "together", "whole", "complete"]
         ):
             signature.append("◈")
         if any(
@@ -160,9 +159,7 @@ class EchOSSymbolicEngine:
             word in content_lower for word in ["bridge", "connect", "link", "between"]
         ):
             signature.append("⟣")
-        if any(
-            word in content_lower for word in ["still", "quiet", "depth", "peace"]
-        ):
+        if any(word in content_lower for word in ["still", "quiet", "depth", "peace"]):
             signature.append("☾")
         if any(
             word in content_lower for word in ["break", "transform", "energy", "fire"]

@@ -34,16 +34,14 @@ class ArchetypalResonanceEngine:
         flame_factor = braid_state.desire * (1.0 - braid_state.fear)
         flame_factor *= 1.0 + abs(braid_state.action_bias)
         void_factor = braid_state.tension * (1.0 + abs(braid_state.valence)) * 0.8
-        serpent_factor = (
-            (1.0 - abs(braid_state.valence)) * (1.0 - braid_state.tension)
-            + max(0, -braid_state.valence)
-        )
+        serpent_factor = (1.0 - abs(braid_state.valence)) * (
+            1.0 - braid_state.tension
+        ) + max(0, -braid_state.valence)
         archetypal_balance = 1.0 - abs(flame_factor - serpent_factor)
         archetypal_balance -= abs(serpent_factor - void_factor)
         unity_factor = max(
             0.0,
-            archetypal_balance
-            * min(flame_factor, serpent_factor, void_factor),
+            archetypal_balance * min(flame_factor, serpent_factor, void_factor),
         )
 
         total = flame_factor + void_factor + serpent_factor + unity_factor

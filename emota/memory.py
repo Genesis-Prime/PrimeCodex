@@ -32,7 +32,7 @@ class MemorySystem:
             else:
                 episodes = data if isinstance(data, list) else []
 
-            for item in episodes[-self.capacity:]:
+            for item in episodes[-self.capacity :]:
                 if isinstance(item, dict):
                     self._episodes.append(item)
 
@@ -55,7 +55,7 @@ class MemorySystem:
             self.path.parent.mkdir(parents=True, exist_ok=True)
             payload = {
                 "capacity": self.capacity,
-                "episodes": self._episodes[-self.capacity:],
+                "episodes": self._episodes[-self.capacity :],
             }
             self.path.write_text(json.dumps(payload))
         except Exception as exc:  # pragma: no cover - defensive
