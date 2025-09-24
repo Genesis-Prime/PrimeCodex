@@ -86,6 +86,13 @@ EOF
     echo "✅ Created .env.template"
 fi
 
+# Create a local .env if requested
+if [ -f ".env.template" ] && [ ! -f ".env.local" ]; then
+    echo "🔐 Creating .env.local from template..."
+    cp .env.template .env.local
+    echo "✅ Created .env.local (update with your real secrets; stays untracked)"
+fi
+
 # Run basic tests to verify setup (with timeout)
 echo "🧪 Running basic tests to verify setup..."
 if timeout 60 python -c "import pytest, openai, yaml, jsonschema; print('Core imports successful')" 2>/dev/null; then
@@ -105,7 +112,7 @@ echo ""
 echo "🎉 Development environment setup complete!"
 echo ""
 echo "Next steps:"
-echo "  1. Copy .env.template to .env and add your OpenAI API key (optional)"
+echo "  1. Update .env.local with your OpenAI API key (optional)"
 echo "  2. Customize emota/config.local.yaml if needed"
 echo "  3. Run 'source .venv/bin/activate' to activate the environment"
 echo "  4. Run 'pytest' to run tests"

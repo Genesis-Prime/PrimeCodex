@@ -22,7 +22,7 @@ New collaborator or AI agent getting started?
 
 1. Run `./scripts/setup_dev.sh` for automated environment setup.
 2. Review [COPILOT_AGENT.md](COPILOT_AGENT.md) for development patterns and guardrails.
-3. Copy `.env.template` to `.env` and fill in secrets (e.g., `OPENAI_API_KEY`) when running live integrations.
+3. Copy `.env.template` to `.env.local` (gitignored) and fill in secrets (e.g., `OPENAI_API_KEY`) when running live integrations.
 4. Use the issue templates in `.github/ISSUE_TEMPLATE/` to seed bug reports, feature ideas, or Copilot delegations.
 
 **Key reference files**: `COPILOT_AGENT.md`, `CONTRIBUTING.md`, `SECURITY.md`, and the `emota/` engine modules.
@@ -58,6 +58,8 @@ export OPENAI_API_KEY=your-key  # optional unless running live OpenAI demo
 python openai_connect.py
 primecodex --goal 0.6 --threat 0.2 "Exploring an uncertain landscape"
 ```
+
+> ℹ️  Prefer placing long-lived secrets in `.env.local`. The tooling now loads `.env.local` automatically (via `python-dotenv`) so CLI commands can access `OPENAI_API_KEY` without manually exporting it each run.
 
 #### CLI Variations
 

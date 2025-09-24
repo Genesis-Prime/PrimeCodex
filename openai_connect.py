@@ -34,7 +34,8 @@ except ModuleNotFoundError:  # pragma: no cover - only triggered without dotenv
 
 from openai import OpenAI
 
-load_dotenv()
+for _dotenv_path in (".env.local", ".env"):
+    load_dotenv(_dotenv_path, override=False)
 
 ENV_VAR_NAME = "OPENAI_API_KEY"
 
