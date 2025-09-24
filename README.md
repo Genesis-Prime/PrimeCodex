@@ -73,10 +73,10 @@ gp.prime_factors(60)
 Run comparable functionality from the CLI:
 
 ```bash
-python prime_cli.py check 97
-python prime_cli.py generate --count 20
-python prime_cli.py factors 84
-python prime_cli.py range 10 30
+primecodex genesis check 97
+primecodex genesis generate --count 20
+primecodex genesis factors 84
+primecodex genesis range 10 30
 ```
 
 ## Feature Highlights
@@ -105,7 +105,7 @@ python prime_cli.py range 10 30
 - Optimised primality testing with 6k±1 heuristics.
 - Sieve of Eratosthenes and sequential generators.
 - Factorisation, twin-prime detection, and navigation helpers (next/previous primes).
-- Comprehensive CLI covering check, generate, factor, range, next/prev, twin, and stats commands.
+- Unified Typer CLI (`primecodex`) covering EMOTA (`primecodex emota ...`) and GenesisPrime (`primecodex genesis ...`) commands.
 - In-memory caching for repeated queries.
 
 ## Testing
