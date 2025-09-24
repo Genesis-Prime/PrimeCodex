@@ -2,6 +2,21 @@
 
 Experimental EMOTA Unity framework and OpenAI integration sandbox.
 
+## 🤖 GitHub Copilot Onboarding
+
+**New to this repository?** For streamlined development with AI assistance:
+
+1. **Quick Setup**: Run `./scripts/setup_dev.sh` for automated environment setup
+2. **Read**: [COPILOT_AGENT.md](COPILOT_AGENT.md) for AI development guidelines  
+3. **Configure**: Copy `.env.template` to `.env` and add your OpenAI API key (optional)
+4. **Explore**: Use issue templates for bug reports, features, or Copilot tasks
+
+### Key Files for AI Context
+- `COPILOT_AGENT.md` - Complete development guide and context
+- `CONTRIBUTING.md` - Contribution guidelines
+- `SECURITY.md` - Security policies and secret management
+- `emota/` - Core EMOTA framework modules
+
 ## Quick Start
 
 ```bash
@@ -67,6 +82,9 @@ Live OpenAI call test skipped if `OPENAI_API_KEY` absent.
 - Add unit tests (avoid network I/O)
 - Update README architecture if conceptual model changes
 - Run `pytest` before commit
+- **For AI-assisted development**: Follow patterns in `COPILOT_AGENT.md`
+- **Code quality**: Run `ruff check .` and `ruff format .` before commit
+- **Security**: Enable git hooks with `git config core.hooksPath .githooks`
 
 ## Security & Secrets
 Never commit `.env`. The repository provides:

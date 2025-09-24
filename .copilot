@@ -1,0 +1,29 @@
+# GitHub Copilot Project Configuration
+
+# Project: PrimeCodex - EMOTA Unity Framework
+# This file provides context for GitHub Copilot and AI assistants
+
+# Key project characteristics:
+# - Experimental research codebase focused on emotional-motivational AI
+# - Python 3.10+ with OpenAI API integration
+# - Strong security practices for API key management
+# - Modular architecture with clear subsystem boundaries
+
+# Important patterns to follow:
+# - Always mock network calls in tests
+# - Never commit secrets or API keys
+# - Use clear, descriptive naming for experimental concepts
+# - Maintain backward compatibility in configuration
+# - Follow the development checklist in README.md
+
+# Preferred coding style:
+# - Use type hints where helpful
+# - Clear docstrings for complex logic
+# - Modular, testable functions
+# - Consistent error handling patterns
+
+# Security requirements:
+# - API keys via environment variables only
+# - Use .env files (gitignored) for local development
+# - Pre-commit hooks for secret scanning
+# - Immediate rotation if secrets are accidentally committed
