@@ -1,77 +1,101 @@
 # PrimeCodex
 
-## OpenAI API Connection Example
+Experimental EMOTA Unity framework and OpenAI integration sandbox.
 
-This project demonstrates how to connect to the OpenAI API using Python.
+## Quick Start
 
-### Setup
-
-1. Install dependencies:
-	```bash
-	pip install openai
-	```
-2. Set your OpenAI API key as an environment variable:
-	```bash
-	export OPENAI_API_KEY=your-api-key-here
-	```
-3. Run the example script:
-	```bash
-	python openai_connect.py
-	```
-
-### Example Usage
-See `openai_connect.py` for a basic example of making a request to the OpenAI API.
-# Security & Secrets
-Do NOT commit your `.env` file or any API keys. The file is ignored via `.gitignore`.
-If a secret is accidentally committed:
-1. Rotate the key in the provider dashboard.
-2. Remove the file and commit.
-3. Use a fresh clone and run `scripts/cleanup_secrets.sh` (requires `git-filter-repo`).
-4. Force push the cleaned history.
-
-# EMOTA Unity Framework
-
-## Usage Example
-
-The EMOTA Unity framework is modularized under the `emota/` directory. Here is a basic usage example:
-
-```python
-from emota.unity import EMOTAUnityEngine
-
-engine = EMOTAUnityEngine()
-result = engine.process_experience(
-	 "Sample experience input",
-	 {"goal_value": 0.7, "threat_level": 0.2}
-)
-print(result)
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .[dev]
+cp emota/config.yaml emota/config.local.yaml  # (optional override)
+export OPENAI_API_KEY=your-key  # optional if running OpenAI example
+python openai_connect.py
+primecodex --goal 0.6 --threat 0.2 "Exploring an uncertain landscape"
 ```
 
-## Modules
-- `emota/braid.py`: Desire-Fear motivational substrate
-- `emota/archetype.py`: Archetypal resonance system
-- `emota/unity.py`: Core integration engine
+## Installation
+Editable dev install (preferred for iteration):
+```bash
+pip install -e .[dev]
+```
+Or basic runtime only:
+```bash
+pip install .
+```
+
+## CLI Usage
+```bash
+primecodex --goal 0.7 --threat 0.1 --novelty 0.3 "Encountering a new opportunity"
+```
+Read experience text from stdin:
+```bash
+echo "Entering a dark corridor" | primecodex --goal 0.4 --threat 0.5 --pretty
+```
+
+## Architecture (Text Diagram)
+```
+Experience → Motivational Braid (desire,fear,valence,tension)
+            ↘ Archetypal Resonance (serpent/flame/void/unity balance)
+             ↘ Future: Cathedral / Dimensional Bridge / Memory Layers
+Output: Unified state snapshot (policy, braid code, archetypal mode)
+```
+
+### Core Modules
+- `emota/braid.py` – Desire/Fear dynamical system with hysteresis bits.
+- `emota/archetype.py` – Resonance engine mapping motivational dynamics to archetypal pattern activations.
+- `emota/unity.py` – Integration wrapper (now supports `config_path`).
+- `emota/cathedral.py` – Placeholder for macro-structural planning layer.
+- `emota/bridge.py` – Placeholder for symbolic/sub-symbolic translation layer.
+
+### Configuration
+Runtime parameters load from `emota/config.yaml` by default. Provide an alternate file via CLI `--config` or `EMOTA_CONFIG` (future) or pass `config_path` to `EMOTAUnityEngine`.
+
+## OpenAI Example
+Located in `openai_connect.py`. Uses `OPENAI_API_KEY`. Tests mock live calls unless key exported.
 
 ## Testing
-Run all tests with:
 ```bash
 pytest
 ```
+Live OpenAI call test skipped if `OPENAI_API_KEY` absent.
+
+## Development Checklist
+- Add new subsystem stub in `emota/`
+- Add unit tests (avoid network I/O)
+- Update README architecture if conceptual model changes
+- Run `pytest` before commit
+
+## Security & Secrets
+Never commit `.env`. The repository provides:
+- `.githooks/pre-commit` secret pattern scanner (enable with `git config core.hooksPath .githooks`).
+- `scripts/cleanup_secrets.sh` (fresh clone interactive history rewrite)
+- `scripts/mirror_history_purge.sh` (automated mirror purge)
+
+### If a Secret Was Committed
+1. Rotate key immediately.
+2. Perform mirror purge (see below) in a clean environment.
+3. Force push rewritten history.
+4. Fresh-clone and verify absence: `git log --all -- .env` returns nothing.
+
+### Mirror Purge Summary
+```bash
+./scripts/mirror_history_purge.sh git@github.com:your-org/PrimeCodex.git
+# then fresh clone & verify
+```
+
+## Roadmap
+- Memory layering & temporal weaving
+- Adaptive policy arbitration
+- Extended archetypal harmonic analytics
+- Cathedral planning engine
+- Dimensional bridge translation layer
 
 ## Contributing
-See `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` for guidelines.
+See `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`.
 
-## Enabling Local Pre-Commit Secret Scan
-Enable custom hooks:
-```bash
-git config core.hooksPath .githooks
-```
-This will block commits containing obvious secret patterns (e.g., `sk-`, `OPENAI_API_KEY=`).
+## License
+Internal experimental use (no open license declared). Contact maintainer before external distribution.
 
-## API Key Rotation
-If a key is exposed:
-1. Generate a new key in the provider dashboard.
-2. Update local `.env` (never commit it).
-3. Run a quick functionality test (`python openai_connect.py`).
-4. Revoke the old key after confirming the new one works.
-5. If the old key was committed, perform history purge (see Security & Secrets section).
-# PrimeCodex
+---
+Generated state snapshots are experimental and not safety-audited.
