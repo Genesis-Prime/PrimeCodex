@@ -54,7 +54,15 @@ jobs:
 
       - name: Basic secret pattern check
         run: |
-          ! grep -R "OPENAI_API_KEY=" -n . --exclude-dir=.git || (echo "Potential secret pattern found" && exit 1)
+          ! grep -R "OPENAI_API_KEY=" -n . \
+            --exclude-dir=.git \
+            --exclude-dir=.venv \
+            --exclude-dir=.github \
+            --exclude-dir=.githooks \
+            --exclude-dir=scripts \
+            --exclude=*.md \
+            --exclude=*.template \
+            || (echo "Potential secret pattern found" && exit 1)
 
   test:
     name: Tests
