@@ -265,10 +265,7 @@ class DimensionalConsciousnessBridge:
                     for i in range(dim)
                 ]
                 var_vector = [
-                    sum(
-                        (vector[i] - mean_vector[i]) ** 2
-                        for vector in all_vectors
-                    )
+                    sum((vector[i] - mean_vector[i]) ** 2 for vector in all_vectors)
                     / len(all_vectors)
                     for i in range(dim)
                 ]

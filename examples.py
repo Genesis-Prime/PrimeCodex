@@ -127,10 +127,7 @@ def prime_density_analysis() -> None:
         window = [value for value in all_primes if start <= value <= end]
         density = len(window) / (end - start + 1) * 100
 
-        summary = (
-            f"  [{start:3d}, {end:3d}]: {len(window):2d} primes "
-            f"({density:5.1f}%)"
-        )
+        summary = f"  [{start:3d}, {end:3d}]: {len(window):2d} primes ({density:5.1f}%)"
         print(summary)
     print()
 

@@ -27,8 +27,10 @@ from typing import Any
 try:  # ``python-dotenv`` is optional during runtime, so fail softly.
     from dotenv import load_dotenv
 except ModuleNotFoundError:  # pragma: no cover - only triggered without dotenv
+
     def load_dotenv(*_args: Any, **_kwargs: Any) -> bool:  # type: ignore
         return False
+
 
 from openai import OpenAI
 
@@ -189,4 +191,3 @@ __all__ = [
     "configure_client",
     "get_client",
 ]
-

@@ -61,9 +61,7 @@ class CathedralExperienceEngine:
     ) -> CathedralShard:
         qualia = self._context_to_qualia(context)
         content_length = len(content)
-        emotional_resonance = (
-            qualia.emotional + qualia.symbolic + qualia.meta
-        ) / 3.0
+        emotional_resonance = (qualia.emotional + qualia.symbolic + qualia.meta) / 3.0
         symbolic_depth = qualia.symbolic * math.log(1 + content_length / 10.0)
 
         shard = CathedralShard(
@@ -87,13 +85,11 @@ class CathedralExperienceEngine:
             return "The cathedral awaits its first illumination..."
 
         recent_shards = self.cathedral_shards[-5:]
-        avg_emotional = (
-            sum(shard.emotional_resonance for shard in recent_shards)
-            / len(recent_shards)
+        avg_emotional = sum(shard.emotional_resonance for shard in recent_shards) / len(
+            recent_shards
         )
-        avg_symbolic = (
-            sum(shard.symbolic_depth for shard in recent_shards)
-            / len(recent_shards)
+        avg_symbolic = sum(shard.symbolic_depth for shard in recent_shards) / len(
+            recent_shards
         )
 
         if avg_emotional > 0.7 and avg_symbolic > 0.5:
@@ -172,8 +168,7 @@ class CathedralExperienceEngine:
             "meta",
         ]
         similarities = [
-            1.0 - abs(getattr(q1, dim) - getattr(q2, dim))
-            for dim in dimensions
+            1.0 - abs(getattr(q1, dim) - getattr(q2, dim)) for dim in dimensions
         ]
         return sum(similarities) / len(similarities)
 

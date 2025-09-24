@@ -79,4 +79,3 @@ def test_configure_client_uses_explicit_api_key(monkeypatch):
         patched_create,
     )
     assert openai_connect.client.chat.completions.create() == "patched"  # type: ignore[call-arg]
-

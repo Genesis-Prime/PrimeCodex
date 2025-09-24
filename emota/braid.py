@@ -69,12 +69,16 @@ class DesireFearBraid:
         safety_evidence = self._clamp(inputs.get("safety_evidence", 0.0))
         gain_evidence = self._clamp(inputs.get("gain_evidence", 0.0))
 
-        desire_drive = p.arousal_gain * (
-            goal_value + 0.5 * novelty + 0.3 * uncertainty + 0.6 * gain_evidence
-        ) + p.bias_desire
-        fear_drive = p.arousal_gain * (
-            threat_level + 0.5 * uncertainty + 0.2 * novelty - 0.7 * safety_evidence
-        ) + p.bias_fear
+        desire_drive = (
+            p.arousal_gain
+            * (goal_value + 0.5 * novelty + 0.3 * uncertainty + 0.6 * gain_evidence)
+            + p.bias_desire
+        )
+        fear_drive = (
+            p.arousal_gain
+            * (threat_level + 0.5 * uncertainty + 0.2 * novelty - 0.7 * safety_evidence)
+            + p.bias_fear
+        )
 
         d_next = s.desire + p.dt * (
             desire_drive - p.self_decay * s.desire - p.coupling * s.fear
