@@ -1,101 +1,108 @@
 # PrimeCodex
 
-Experimental EMOTA Unity framework and OpenAI integration sandbox.
+Unified space for two experimental tracks:
 
-## Quick Start
+1. **EMOTA Unity Sandbox** – motivational dynamics, archetypal resonance, and OpenAI integration experiments.
+2. **GenesisPrime Toolkit** – a high-performance prime number exploration library and command-line interface.
+
+Both tracks now live together so the project history remains intact while enabling cross-pollination between algorithmic tooling and affective simulations.
+
+## Repository Layout
+
+| Path | Purpose |
+|------|---------|
+| `emota/` | EMOTA Unity engine components (braid dynamics, archetypes, unity integration).
+| `cli.py` | Entry point for the EMOTA-oriented CLI (`primecodex`).
+| `openai_connect.py` | OpenAI API integration example (mocked in tests unless API key exported).
+| `genesis_prime.py` | Core GenesisPrime number theory library.
+| `prime_cli.py` | CLI façade for GenesisPrime operations.
+| `examples.py`, `quickstart.py` | GenesisPrime usage walkthroughs and demos.
+| `scripts/` | Repository maintenance utilities (secret scrubbing, setup helpers).
+
+## Getting Started
+
+### 1. Environment Setup
 
 ```bash
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .[dev]
-cp emota/config.yaml emota/config.local.yaml  # (optional override)
-export OPENAI_API_KEY=your-key  # optional if running OpenAI example
+```
+
+### 2. EMOTA Unity Quickstart
+
+```bash
+cp emota/config.yaml emota/config.local.yaml  # optional override
+export OPENAI_API_KEY=your-key  # optional unless running live OpenAI demo
 python openai_connect.py
 primecodex --goal 0.6 --threat 0.2 "Exploring an uncertain landscape"
 ```
 
-## Installation
-Editable dev install (preferred for iteration):
-```bash
-pip install -e .[dev]
-```
-Or basic runtime only:
-```bash
-pip install .
-```
+#### CLI Variations
 
-## CLI Usage
 ```bash
 primecodex --goal 0.7 --threat 0.1 --novelty 0.3 "Encountering a new opportunity"
-```
-Read experience text from stdin:
-```bash
 echo "Entering a dark corridor" | primecodex --goal 0.4 --threat 0.5 --pretty
 ```
 
-## Architecture (Text Diagram)
+### 3. GenesisPrime Quickstart
+
+```python
+from genesis_prime import GenesisPrime
+
+gp = GenesisPrime()
+gp.is_prime(97)
+gp.generate_primes_sequence(10)
+gp.prime_factors(60)
 ```
-Experience → Motivational Braid (desire,fear,valence,tension)
-            ↘ Archetypal Resonance (serpent/flame/void/unity balance)
-             ↘ Future: Cathedral / Dimensional Bridge / Memory Layers
-Output: Unified state snapshot (policy, braid code, archetypal mode)
+
+Run comparable functionality from the CLI:
+
+```bash
+python prime_cli.py check 97
+python prime_cli.py generate --count 20
+python prime_cli.py factors 84
+python prime_cli.py range 10 30
 ```
 
-### Core Modules
-- `emota/braid.py` – Desire/Fear dynamical system with hysteresis bits.
-- `emota/archetype.py` – Resonance engine mapping motivational dynamics to archetypal pattern activations.
-- `emota/unity.py` – Integration wrapper (now supports `config_path`).
-- `emota/cathedral.py` – Placeholder for macro-structural planning layer.
-- `emota/bridge.py` – Placeholder for symbolic/sub-symbolic translation layer.
+## Feature Highlights
 
-### Configuration
-Runtime parameters load from `emota/config.yaml` by default. Provide an alternate file via CLI `--config` or `EMOTA_CONFIG` (future) or pass `config_path` to `EMOTAUnityEngine`.
+### EMOTA Unity
 
-## OpenAI Example
-Located in `openai_connect.py`. Uses `OPENAI_API_KEY`. Tests mock live calls unless key exported.
+- Desire/Fear braid oscillator with hysteresis bits (`emota/braid.py`).
+- Archetypal resonance engine projecting braid state into serpent/flame/void/unity axes (`emota/archetype.py`).
+- Unity wrapper coordinating configuration and state snapshots (`emota/unity.py`).
+- Extensible placeholders for cathedral planning and symbolic bridges.
+- Configurable via YAML, overridable through `--config` or direct engine parameters.
+
+### GenesisPrime Toolkit
+
+- Optimised primality testing with 6k±1 heuristics.
+- Sieve of Eratosthenes and sequential generators.
+- Factorisation, twin-prime detection, and navigation helpers (next/previous primes).
+- Comprehensive CLI covering check, generate, factor, range, next/prev, twin, and stats commands.
+- In-memory caching for repeated queries.
 
 ## Testing
+
 ```bash
 pytest
 ```
-Live OpenAI call test skipped if `OPENAI_API_KEY` absent.
 
-## Development Checklist
-- Add new subsystem stub in `emota/`
-- Add unit tests (avoid network I/O)
-- Update README architecture if conceptual model changes
-- Run `pytest` before commit
+- OpenAI integration tests auto-skip when `OPENAI_API_KEY` is absent.
+- GenesisPrime includes demonstration routines in `examples.py` and `quickstart.py` for manual smoke checks.
 
-## Security & Secrets
-Never commit `.env`. The repository provides:
-- `.githooks/pre-commit` secret pattern scanner (enable with `git config core.hooksPath .githooks`).
-- `scripts/cleanup_secrets.sh` (fresh clone interactive history rewrite)
-- `scripts/mirror_history_purge.sh` (automated mirror purge)
+## Development Notes
 
-### If a Secret Was Committed
-1. Rotate key immediately.
-2. Perform mirror purge (see below) in a clean environment.
-3. Force push rewritten history.
-4. Fresh-clone and verify absence: `git log --all -- .env` returns nothing.
+- Maintain code style and typing as introduced in `emota/` modules.
+- When extending GenesisPrime, keep algorithms deterministic and document complexity considerations.
+- Update this README when a new subsystem (EMOTA) or algorithm family (GenesisPrime) is introduced.
+- Secrets: never commit `.env` files. Use the scripts in `scripts/` for incident response if needed.
 
-### Mirror Purge Summary
-```bash
-./scripts/mirror_history_purge.sh git@github.com:your-org/PrimeCodex.git
-# then fresh clone & verify
-```
+## Licensing & Conduct
 
-## Roadmap
-- Memory layering & temporal weaving
-- Adaptive policy arbitration
-- Extended archetypal harmonic analytics
-- Cathedral planning engine
-- Dimensional bridge translation layer
-
-## Contributing
-See `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`.
-
-## License
-Internal experimental use (no open license declared). Contact maintainer before external distribution.
+See `LICENSE`, `CODE_OF_CONDUCT.md`, and `CONTRIBUTING.md` for contribution guidelines and usage terms.
 
 ---
-Generated state snapshots are experimental and not safety-audited.
+
+This unified branch retains both experimental lines so historical exploration, numerical tooling, and affective modelling can advance together.
