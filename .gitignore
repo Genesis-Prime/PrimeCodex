@@ -1,7 +1,23 @@
 <<<<<<< HEAD
 # Environment & secrets
 .env
+.env.local
+*.env
+!.env.template
+*.env.local
+*.secret
+.secrets/
+secrets/*.json
+
+# Python caches & build artefacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+# Environment & secrets
+.env
 .env.*
+!.env.template
 *.env
 *.env.local
 *.secret
@@ -32,11 +48,11 @@ wheels/
 *.egg
 MANIFEST
 
-# Installer & packaging logs
-pip-log.txt
-pip-delete-this-directory.txt
+# PyInstaller & installer logs
 *.manifest
 *.spec
+pip-log.txt
+pip-delete-this-directory.txt
 
 # Testing & coverage
 .coverage
@@ -68,6 +84,7 @@ celerybeat-schedule
 dmypy.json
 
 # Virtual environments
+.venv/
 .venv
 venv/
 env/
@@ -97,10 +114,6 @@ venv.bak/
 .Trashes
 ehthumbs.db
 Thumbs.db
-=======
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
 *$py.class
 
 # C extensions

@@ -1,0 +1,12 @@
+braid:
+  dt: 1.0
+  self_decay: 0.25
+  coupling: 0.45
+  arousal_gain: 0.8
+  bias_desire: 0.02
+  bias_fear: 0.02
+  tension_weight: 0.6
+  act_threshold: 0.15
+  investigate_band: 0.08
+  bin_on: 0.62
+  bin_off: 0.48

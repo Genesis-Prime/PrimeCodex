@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
+from typing import List, Optional, Sequence, Tuple
+
 
 class ArchetypalPattern(Enum):
     SERPENT = "Serpent of Stillness"
     FLAME = "Flame of Breakthrough"
     VOID = "Void of Integration"
     UNITY = "Unity of Transcendence"
+
 
 @dataclass
 class ArchetypalState:
@@ -19,48 +23,59 @@ class ArchetypalState:
     harmonic_frequency: float = 0.0
     phase_coherence: float = 0.0
 
+
 class ArchetypalResonanceEngine:
-    def __init__(self):
-        try:
-            self.state = ArchetypalState()
-            self.activation_history = []
-            self.resonance_memory = []
-        except Exception as e:
-            print(f"Error initializing ArchetypalResonanceEngine: {e}")
+    def __init__(self) -> None:
+        self.state = ArchetypalState()
+        self.activation_history: List[Sequence[Tuple[ArchetypalPattern, float]]] = []
+        self.resonance_memory: List[ArchetypalState] = []
+
     def process_braid_resonance(self, braid_state) -> ArchetypalState:
         flame_factor = braid_state.desire * (1.0 - braid_state.fear) * (1.0 + abs(braid_state.action_bias))
         void_factor = braid_state.tension * (1.0 + abs(braid_state.valence)) * 0.8
         serpent_factor = (1.0 - abs(braid_state.valence)) * (1.0 - braid_state.tension) + max(0, -braid_state.valence)
         archetypal_balance = 1.0 - abs(flame_factor - serpent_factor) - abs(serpent_factor - void_factor)
         unity_factor = max(0.0, archetypal_balance * min(flame_factor, serpent_factor, void_factor))
+
         total = flame_factor + void_factor + serpent_factor + unity_factor
         if total > 0:
             self.state.flame_activation = flame_factor / total
             self.state.void_activation = void_factor / total
             self.state.serpent_activation = serpent_factor / total
             self.state.unity_activation = unity_factor / total
-        activations = {
-            ArchetypalPattern.FLAME: self.state.flame_activation,
-            ArchetypalPattern.VOID: self.state.void_activation,
-            ArchetypalPattern.SERPENT: self.state.serpent_activation,
-            ArchetypalPattern.UNITY: self.state.unity_activation
-        }
-        self.state.dominant_pattern = max(activations, key=activations.get)
-        max_activation = max(activations.values())
+
+        activations = [
+            (ArchetypalPattern.FLAME, self.state.flame_activation),
+            (ArchetypalPattern.VOID, self.state.void_activation),
+            (ArchetypalPattern.SERPENT, self.state.serpent_activation),
+            (ArchetypalPattern.UNITY, self.state.unity_activation),
+        ]
+
+        dominant_pattern, max_activation = max(activations, key=lambda item: item[1])
+        self.state.dominant_pattern = dominant_pattern
         if max_activation > 0.7:
             self.state.resonance_mode = "dominant"
         elif max_activation < 0.4:
             self.state.resonance_mode = "balanced"
         else:
             self.state.resonance_mode = "flowing"
-        self.state.harmonic_frequency = sum(activations.values()) * braid_state.tension
-        if len(self.activation_history) > 1:
-            prev_activations = self.activation_history[-1]
-            coherence_sum = sum(1.0 - abs(activations[pattern] - prev_activations[pattern]) for pattern in activations)
-            self.state.phase_coherence = coherence_sum / len(activations)
-        else:
-            self.state.phase_coherence = 1.0
-        self.activation_history.append(activations.copy())
+
+        self.state.harmonic_frequency = sum(a for _, a in activations) * braid_state.tension
+        self.state.phase_coherence = self._phase_coherence(activations)
+
+        self.activation_history.append(list(activations))
         if len(self.activation_history) > 50:
             self.activation_history.pop(0)
+
         return self.state
+
+    def _phase_coherence(self, activations: Sequence[Tuple[ArchetypalPattern, float]]) -> float:
+        if len(self.activation_history) < 1:
+            return 1.0
+
+        previous = {pattern: activation for pattern, activation in self.activation_history[-1]}
+        coherence_sum = 0.0
+        for pattern, current_activation in activations:
+            previous_activation = previous.get(pattern, current_activation)
+            coherence_sum += 1.0 - abs(current_activation - previous_activation)
+        return coherence_sum / len(activations)

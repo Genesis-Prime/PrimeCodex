@@ -1,0 +1,68 @@
+name: Feature Request
+description: Suggest a new feature or enhancement for PrimeCodex
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for suggesting a new feature! Please provide details about your idea.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: Is your feature request related to a problem? Please describe.
+      placeholder: "I'm frustrated when... It would be helpful if..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: Describe the solution you'd like to see
+      placeholder: "I would like to see... This could work by..."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component Area
+      description: Which part of PrimeCodex would this affect?
+      options:
+        - "EMOTA Core (braid, archetype, unity)"
+        - "CLI Interface"
+        - "OpenAI Integration"
+        - "Configuration System"
+        - "Testing Framework"
+        - "Documentation"
+        - "Security/Secrets Management"
+        - "Other/Multiple Components"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Implementation Considerations
+      description: Check all that apply
+      options:
+        - label: "This would require API changes"
+        - label: "This might affect existing configurations"
+        - label: "This could impact security or secrets handling"
+        - label: "This requires new dependencies"
+        - label: "This affects the CLI interface"
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Describe any alternative solutions or features you've considered
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockups, or examples about the feature request
