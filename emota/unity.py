@@ -1,17 +1,23 @@
 from emota.braid import DesireFearBraid
 from emota.archetype import ArchetypalResonanceEngine
+from emota.memory import MemorySystem
+from emota.logging_utils import configure_logger
 
 class EMOTAUnityEngine:
-    def __init__(self, identity_name: str = "Prime", config_path: str | None = None):
+    def __init__(self, identity_name: str = "Prime", config_path: str | None = None,
+                 memory_path: str | None = None, log_level: str = "INFO", json_logging: bool = False):
+        self.identity_name = identity_name
         self.braid_engine = DesireFearBraid(config_path=config_path)
         self.archetypal_engine = ArchetypalResonanceEngine()
-        # ...other subsystem initializations...
-        # For brevity, only core integration shown
-    def process_experience(self, content: str, environmental_inputs=None):
-        environmental_inputs = environmental_inputs or {}
-        braid_state = self.braid_engine.step(environmental_inputs)
-        archetypal_state = self.archetypal_engine.process_braid_resonance(braid_state)
+        self.logger = configure_logger(level=log_level, json_mode=json_logging)
+        self.memory_path = memory_path
+        self.memory = MemorySystem.load(memory_path) if memory_path else MemorySystem()
+
+    def snapshot(self, braid_state, archetypal_state, content: str, inputs):  # pragma: no cover trivial
         return {
+            "identity": self.identity_name,
+            "content": content,
+            "inputs": inputs,
             "motivational_state": {
                 "desire": braid_state.desire,
                 "fear": braid_state.fear,
@@ -30,3 +36,17 @@ class EMOTAUnityEngine:
                 "harmonic_frequency": archetypal_state.harmonic_frequency
             }
         }
+
+    def process_experience(self, content: str, environmental_inputs=None):
+        environmental_inputs = environmental_inputs or {}
+        braid_state = self.braid_engine.step(environmental_inputs)
+        archetypal_state = self.archetypal_engine.process_braid_resonance(braid_state)
+        snap = self.snapshot(braid_state, archetypal_state, content, environmental_inputs)
+        self.memory.record(snap)
+        if self.memory_path:
+            try:
+                self.memory.save(self.memory_path)
+            except Exception as e:  # pragma: no cover
+                self.logger.error({"event": "memory_save_failed", "error": str(e)})
+        self.logger.info({"event": "experience_processed", "policy": snap["motivational_state"]["policy"], "braid_code": snap["motivational_state"]["braid_code"]})
+        return snap
