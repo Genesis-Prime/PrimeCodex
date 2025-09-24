@@ -59,4 +59,19 @@ pytest
 
 ## Contributing
 See `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` for guidelines.
+
+## Enabling Local Pre-Commit Secret Scan
+Enable custom hooks:
+```bash
+git config core.hooksPath .githooks
+```
+This will block commits containing obvious secret patterns (e.g., `sk-`, `OPENAI_API_KEY=`).
+
+## API Key Rotation
+If a key is exposed:
+1. Generate a new key in the provider dashboard.
+2. Update local `.env` (never commit it).
+3. Run a quick functionality test (`python openai_connect.py`).
+4. Revoke the old key after confirming the new one works.
+5. If the old key was committed, perform history purge (see Security & Secrets section).
 # PrimeCodex

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Simple secret scan: blocks commits containing patterns like 'sk-' (OpenAI), 'API_KEY', or 'SECRET='
+set -euo pipefail
+
+PATTERNS=('sk-[A-Za-z0-9]+' 'API_KEY=' 'SECRET_KEY=' 'OPENAI_API_KEY=')
+MATCHES=()
+
+STAGED_FILES=$(git diff --cached --name-only)
+
+for f in $STAGED_FILES; do
+  # Skip deleted files
+  [[ -f "$f" ]] || continue
+  for p in "${PATTERNS[@]}"; do
+    if grep -E -q "$p" "$f"; then
+      MATCHES+=("$f:$p")
+    fi
+  done
+done
+
+if (( ${#MATCHES[@]} > 0 )); then
+  echo "[PRE-COMMIT] Potential secret patterns detected:" >&2
+  for m in "${MATCHES[@]}"; do echo "  - $m" >&2; done
+  echo "Commit aborted. Remove or secure these before committing." >&2
+  exit 1
+fi
+
+exit 0
