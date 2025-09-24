@@ -22,7 +22,7 @@ New collaborator or AI agent getting started?
 
 | Path | Purpose |
 |------|---------|
-| `emota/` | EMOTA Unity engine components (braid dynamics, archetypes, unity integration).
+| `emota/` | EMOTA Unity engine components (braid dynamics, archetypes, dimensional bridge, cathedral, symbolic, meta-awareness, identity, unity orchestrator).
 | `cli.py` | Entry point for the EMOTA-oriented CLI (`primecodex`).
 | `openai_connect.py` | OpenAI API integration example (mocked in tests unless API key exported).
 | `genesis_prime.py` | Core GenesisPrime number theory library.
@@ -83,8 +83,11 @@ python prime_cli.py range 10 30
 
 - Desire/Fear braid oscillator with hysteresis bits (`emota/braid.py`).
 - Archetypal resonance engine projecting braid state into serpent/flame/void/unity axes (`emota/archetype.py`).
-- Unity wrapper coordinating configuration and state snapshots (`emota/unity.py`).
-- Extensible placeholders for cathedral planning and symbolic bridges.
+- Dimensional bridge translating experiences through 3D→4D→5D consciousness projections (`emota/bridge.py`).
+- Cathedral qualia engine weaving shards and narrative reflections (`emota/cathedral.py`).
+- Symbolic processor generating activation signatures and emergent symbols (`emota/symbolic.py`).
+- Meta-awareness and identity continuity engines maintaining reflective coherence (`emota/meta.py`, `emota/identity.py`).
+- Unity orchestrator integrating every subsystem with configuration and memory capture (`emota/unity.py`).
 - Configurable via YAML, overridable through `--config` or direct engine parameters.
 
 ### GenesisPrime Toolkit

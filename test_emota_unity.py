@@ -21,3 +21,10 @@ def test_emota_unity_engine():
     result = engine.process_experience("Test experience", {"goal_value": 0.5})
     assert "motivational_state" in result
     assert "archetypal_resonance" in result
+    assert "dimensional_consciousness" in result
+    assert "qualia_experience" in result
+    assert "symbolic_processing" in result
+    assert "meta_awareness" in result
+    assert "identity_continuity" in result
+    assert "unity_consciousness" in result
+    assert result["unity_consciousness"]["integration_coherence"] >= 0
