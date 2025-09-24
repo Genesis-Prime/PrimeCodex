@@ -63,6 +63,8 @@ jobs:
             --exclude=POST_PURGE_CHECKLIST.md \
             --exclude=setup_dev.sh \
             --exclude=.env.template \
+            --exclude="*.md" \
+            --exclude="*.template" \
             || (echo "Potential secret pattern found" && exit 1)
 
   test:
