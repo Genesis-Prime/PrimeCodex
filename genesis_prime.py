@@ -10,7 +10,7 @@ This module provides essential prime number operations including:
 """
 
 import math
-from typing import List, Set
+from typing import List, Optional, Set
 
 
 class GenesisPrime:
@@ -154,7 +154,7 @@ class GenesisPrime:
             candidate += 1
         return candidate
     
-    def prev_prime(self, n: int) -> int:
+    def prev_prime(self, n: int) -> Optional[int]:
         """
         Find the previous prime number before n
         
@@ -162,7 +162,7 @@ class GenesisPrime:
             n: Starting number
             
         Returns:
-            int: The previous prime number before n, or None if n <= 2
+            Optional[int]: The previous prime number before n, or None if n <= 2
         """
         if n <= 2:
             return None
@@ -170,7 +170,7 @@ class GenesisPrime:
         candidate = n - 1
         while candidate > 1 and not self.is_prime(candidate):
             candidate -= 1
-        
+
         return candidate if candidate > 1 else None
     
     def is_twin_prime(self, n: int) -> bool:
