@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
-from typing import List, Optional
+from typing import Any
 
 import typer
 
@@ -13,7 +13,10 @@ from genesis_prime import GenesisPrime
 
 app = typer.Typer(
     add_completion=False,
-    help="PrimeCodex unified interface for EMOTA Unity experiences and GenesisPrime tools.",
+    help=(
+        "PrimeCodex unified interface for EMOTA Unity experiences "
+        "and GenesisPrime tools."
+    ),
 )
 
 genesis_app = typer.Typer(help="Prime number exploration commands")
@@ -21,19 +24,22 @@ app.add_typer(genesis_app, name="genesis")
 
 
 # ---------------------------------------------------------------------------
-# Helpers
 
-def _resolve_experience(experience: Optional[str]) -> str:
+
+def _resolve_experience(experience: str | None) -> str:
     if experience:
         return experience
     data = sys.stdin.read().strip()
     if not data:
-        typer.echo("Experience text must be provided either as an argument or via stdin.", err=True)
+        typer.echo(
+            "Experience text must be provided either as an argument or via stdin.",
+            err=True,
+        )
         raise typer.Exit(code=1)
     return data
 
 
-def _format_list(numbers: List[int], max_per_line: int = 10) -> str:
+def _format_list(numbers: list[int], max_per_line: int = 10) -> str:
     if not numbers:
         return "None"
     lines = []
@@ -44,14 +50,14 @@ def _format_list(numbers: List[int], max_per_line: int = 10) -> str:
 
 
 def execute_emota(
-    experience: Optional[str],
+    experience: str | None,
     goal: float,
     threat: float,
     novelty: float,
     uncertainty: float,
     config: str,
-    memory_path: Optional[str],
-) -> dict:
+    memory_path: str | None,
+) -> dict[str, Any]:
     text = _resolve_experience(experience)
     engine = EMOTAUnityEngine(config_path=config, memory_path=memory_path)
     inputs = {
@@ -69,18 +75,55 @@ def execute_emota(
 
 @app.command("emota")
 def emota_command(
-    experience: Optional[str] = typer.Argument(None, help="Experience text (omit to read from stdin)"),
-    goal: float = typer.Option(0.5, min=0.0, max=1.0, help="Goal value (0-1)"),
-    threat: float = typer.Option(0.0, min=0.0, max=1.0, help="Threat level (0-1)"),
-    novelty: float = typer.Option(0.0, min=0.0, max=1.0, help="Novelty measure (0-1)"),
-    uncertainty: float = typer.Option(0.0, min=0.0, max=1.0, help="Uncertainty measure (0-1)"),
-    config: str = typer.Option("emota/config.yaml", help="Path to configuration YAML"),
-    memory_path: Optional[str] = typer.Option(None, help="Path to persist episodic memory JSON"),
+    experience: str | None = typer.Argument(
+        None,
+        help="Experience text (omit to read from stdin)",
+    ),
+    goal: float = typer.Option(
+        0.5,
+        min=0.0,
+        max=1.0,
+        help="Goal value (0-1)",
+    ),
+    threat: float = typer.Option(
+        0.0,
+        min=0.0,
+        max=1.0,
+        help="Threat level (0-1)",
+    ),
+    novelty: float = typer.Option(
+        0.0,
+        min=0.0,
+        max=1.0,
+        help="Novelty measure (0-1)",
+    ),
+    uncertainty: float = typer.Option(
+        0.0,
+        min=0.0,
+        max=1.0,
+        help="Uncertainty measure (0-1)",
+    ),
+    config: str = typer.Option(
+        "emota/config.yaml",
+        help="Path to configuration YAML",
+    ),
+    memory_path: str | None = typer.Option(
+        None,
+        help="Path to persist episodic memory JSON",
+    ),
     pretty: bool = typer.Option(False, help="Pretty-print JSON output"),
 ) -> None:
     """Process an experience through the EMOTA Unity engine."""
 
-    result = execute_emota(experience, goal, threat, novelty, uncertainty, config, memory_path)
+    result = execute_emota(
+        experience,
+        goal,
+        threat,
+        novelty,
+        uncertainty,
+        config,
+        memory_path,
+    )
     indent = 2 if pretty else None
     typer.echo(json.dumps(result, indent=indent))
 
@@ -104,8 +147,18 @@ def genesis_check(number: int) -> None:
 
 @genesis_app.command("generate")
 def genesis_generate(
-    count: Optional[int] = typer.Option(None, "--count", min=1, help="Generate the first N primes"),
-    limit: Optional[int] = typer.Option(None, "--limit", min=2, help="Generate primes up to LIMIT"),
+    count: int | None = typer.Option(
+        None,
+        "--count",
+        min=1,
+        help="Generate the first N primes",
+    ),
+    limit: int | None = typer.Option(
+        None,
+        "--limit",
+        min=2,
+        help="Generate primes up to LIMIT",
+    ),
 ) -> None:
     """Generate prime numbers either by count or by upper limit."""
 
@@ -202,7 +255,7 @@ def genesis_stats() -> None:
 # Entry point helpers
 
 
-def _invoke_with_args(argv: List[str]) -> None:
+def _invoke_with_args(argv: list[str]) -> None:
     original = sys.argv[:]
     try:
         sys.argv = argv
@@ -211,7 +264,7 @@ def _invoke_with_args(argv: List[str]) -> None:
         sys.argv = original
 
 
-def _should_insert_emota(argv: List[str]) -> bool:
+def _should_insert_emota(argv: list[str]) -> bool:
     if len(argv) <= 1:
         return True
     first = argv[1]
@@ -222,21 +275,21 @@ def _should_insert_emota(argv: List[str]) -> bool:
     return True
 
 
-def main(argv: Optional[List[str]] = None) -> None:  # pragma: no cover - exercised via CLI integration tests
+def main(argv: list[str] | None = None) -> None:  # pragma: no cover
     args = list(argv) if argv is not None else sys.argv[:]
     if _should_insert_emota(args):
         args.insert(1, "emota")
     _invoke_with_args(args)
 
 
-def emota_main(argv: Optional[List[str]] = None) -> None:  # pragma: no cover
+def emota_main(argv: list[str] | None = None) -> None:  # pragma: no cover
     args = list(argv) if argv is not None else sys.argv[:]
     if len(args) <= 1 or args[1] != "emota":
         args.insert(1, "emota")
     _invoke_with_args(args)
 
 
-def genesis_main(argv: Optional[List[str]] = None) -> None:  # pragma: no cover
+def genesis_main(argv: list[str] | None = None) -> None:  # pragma: no cover
     args = list(argv) if argv is not None else sys.argv[:]
     if len(args) <= 1:
         args.insert(1, "genesis")

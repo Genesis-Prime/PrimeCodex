@@ -31,7 +31,10 @@ def test_proxy_allows_monkeypatch_without_api_key(monkeypatch):
     # No API key is configured, but thanks to the proxy we can still use the patched
     # attribute.  Attempting to call an unpatched attribute would raise
     # ``OpenAIConfigurationError``.
-    response = client.chat.completions.create(model="gpt-test", messages=[{"role": "user", "content": "Hi"}])
+    response = client.chat.completions.create(
+        model="gpt-test",
+        messages=[{"role": "user", "content": "Hi"}],
+    )
     assert response.choices[0].message.content == "patched"
 
     with pytest.raises(OpenAIConfigurationError):
@@ -67,6 +70,13 @@ def test_configure_client_uses_explicit_api_key(monkeypatch):
     assert openai_connect.client.chat.completions.create() == "real"  # type: ignore[call-arg]
 
     # Monkeypatching continues to work even after configuration.
-    monkeypatch.setattr(openai_connect.client.chat.completions, "create", lambda: "patched")
+    def patched_create() -> str:
+        return "patched"
+
+    monkeypatch.setattr(
+        openai_connect.client.chat.completions,
+        "create",
+        patched_create,
+    )
     assert openai_connect.client.chat.completions.create() == "patched"  # type: ignore[call-arg]
 

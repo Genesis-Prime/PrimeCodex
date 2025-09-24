@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import os
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
 try:  # ``python-dotenv`` is optional during runtime, so fail softly.
     from dotenv import load_dotenv
@@ -45,16 +45,16 @@ class OpenAIConfigurationError(RuntimeError):
 class _Path:
     """Helper that stores a dotted attribute path."""
 
-    parts: Tuple[str, ...]
+    parts: tuple[str, ...]
 
-    def append(self, value: str) -> "_Path":
+    def append(self, value: str) -> _Path:
         return _Path(self.parts + (value,))
 
 
 class _AttributeProxy:
     """A proxy for attributes accessed on :data:`client` before configuration."""
 
-    def __init__(self, manager: "_ClientProxy", path: _Path):
+    def __init__(self, manager: _ClientProxy, path: _Path):
         object.__setattr__(self, "_manager", manager)
         object.__setattr__(self, "_path", path)
 
@@ -93,11 +93,11 @@ class _ClientProxy:
     """Lazily creates :class:`OpenAI` clients and stores monkeypatch overrides."""
 
     def __init__(self) -> None:
-        self._client: Optional[OpenAI] = None
-        self._overrides: Dict[_Path, Any] = {}
+        self._client: OpenAI | None = None
+        self._overrides: dict[_Path, Any] = {}
 
     # ------------------------------------------------------------------ helpers
-    def _resolve_api_key(self, api_key: Optional[str]) -> str:
+    def _resolve_api_key(self, api_key: str | None) -> str:
         if api_key:
             return api_key
         key = os.getenv(ENV_VAR_NAME)
@@ -108,10 +108,10 @@ class _ClientProxy:
             )
         return key
 
-    def _try_resolve_client(self) -> Optional[OpenAI]:
+    def _try_resolve_client(self) -> OpenAI | None:
         return self._client
 
-    def _ensure_client(self, api_key: Optional[str]) -> OpenAI:
+    def _ensure_client(self, api_key: str | None) -> OpenAI:
         if self._client is None:
             key = self._resolve_api_key(api_key)
             self._client = OpenAI(api_key=key)
@@ -141,13 +141,13 @@ class _ClientProxy:
             setattr(target, path.parts[-1], value)
 
     # ---------------------------------------------------------------- interface
-    def configure(self, api_key: Optional[str] = None) -> OpenAI:
+    def configure(self, api_key: str | None = None) -> OpenAI:
         """Force creation of the underlying client using ``api_key`` if provided."""
 
         return self._ensure_client(api_key)
 
-    def ensure_configured(self, api_key: Optional[str] = None) -> OpenAI:
-        """Return a real client, raising :class:`OpenAIConfigurationError` if missing."""
+    def ensure_configured(self, api_key: str | None = None) -> OpenAI:
+        """Return a real client; raise :class:`OpenAIConfigurationError` if missing."""
 
         return self._ensure_client(api_key)
 
@@ -164,13 +164,13 @@ class _ClientProxy:
 client = _ClientProxy()
 
 
-def configure_client(api_key: Optional[str] = None) -> OpenAI:
+def configure_client(api_key: str | None = None) -> OpenAI:
     """Configure the global client and return the resulting instance."""
 
     return client.configure(api_key=api_key)
 
 
-def get_client(api_key: Optional[str] = None) -> OpenAI:
+def get_client(api_key: str | None = None) -> OpenAI:
     """Return a ready-to-use OpenAI client.
 
     Parameters

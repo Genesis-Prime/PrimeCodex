@@ -9,6 +9,13 @@ Unified space for two experimental tracks:
 
 Both tracks now live together so the project history remains intact while enabling cross-pollination between algorithmic tooling and affective simulations.
 
+## 🚀 Release History
+
+| Version | Date | Highlights |
+|---------|------|------------|
+| `0.2.0-beta` | 2025-09-24 | Second iteration beta. Restored EMOTA Unity subsystems, expanded CLI coverage, clarified collaboration guidelines, consolidated tests, and refreshed liability messaging. |
+| `0.1.0-alpha` | 2025-xx-xx | Historical alpha milestone that first combined EMOTA Unity experiments with the GenesisPrime toolkit and early CLI wiring. |
+
 ## 🤖 GitHub Copilot Onboarding
 
 New collaborator or AI agent getting started?
