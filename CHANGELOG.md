@@ -10,3 +10,5 @@
 - Marked PrimeCodex as a beta-stage experimental framework with explicit liability disclaimers.
 - Documented the restored EMOTA Unity subsystems and broadened usage guidance.
 - Clarified collaboration expectations for AI agents and contributors.
+- Reorganized tests under a dedicated `tests/` package and added coverage for EMOTA subsystems.
+- Introduced a Typer-powered unified CLI (`primecodex`) with shared EMOTA and GenesisPrime commands.

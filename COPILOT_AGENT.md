@@ -29,7 +29,9 @@ PrimeCodex/
 │   ├── meta.py            # Meta-awareness reflection engine
 │   ├── identity.py        # Identity continuity tracker
 │   └── memory.py          # Memory buffer and persistence
-├── cli.py                 # Command-line interface
+├── primecodex_cli.py      # Unified Typer CLI (EMOTA + GenesisPrime)
+├── cli.py                 # Legacy EMOTA wrapper delegating to Typer CLI
+├── prime_cli.py           # Legacy Genesis wrapper delegating to Typer CLI
 ├── openai_connect.py      # OpenAI API client utilities
 ├── schema/                # JSON validation schemas
 ├── scripts/               # Utility scripts
