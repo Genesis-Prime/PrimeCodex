@@ -106,6 +106,9 @@ Never commit `.env`. The repository provides:
 ## Contributing
 See `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`.
 
+### Automated Agent Onboarding
+For GitHub Copilot / automated coding agent contribution rules, see `COPILOT_AGENT_ONBOARDING.md`.
+
 ## License
 Internal experimental use (no open license declared). Contact maintainer before external distribution.
 
