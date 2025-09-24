@@ -21,6 +21,14 @@ This project demonstrates how to connect to the OpenAI API using Python.
 
 ### Example Usage
 See `openai_connect.py` for a basic example of making a request to the OpenAI API.
+# Security & Secrets
+Do NOT commit your `.env` file or any API keys. The file is ignored via `.gitignore`.
+If a secret is accidentally committed:
+1. Rotate the key in the provider dashboard.
+2. Remove the file and commit.
+3. Use a fresh clone and run `scripts/cleanup_secrets.sh` (requires `git-filter-repo`).
+4. Force push the cleaned history.
+
 # EMOTA Unity Framework
 
 ## Usage Example
