@@ -18,12 +18,18 @@ class MemorySystem:
         if self.path and self.path.exists():  # pragma: no cover - simple load path
             try:
                 data = json.loads(self.path.read_text())
-                if isinstance(data, list):
-                    for item in data[-self.capacity:]:
-                        if isinstance(item, dict):
-                            self._episodes.append(item)
             except Exception:
-                pass
+                data = None
+            if isinstance(data, dict):
+                episodes = data.get("episodes", [])
+                if isinstance(data.get("capacity"), int) and data["capacity"] > 0:
+                    self.capacity = data["capacity"]
+            else:
+                episodes = data if isinstance(data, list) else []
+
+            for item in episodes[-self.capacity:]:
+                if isinstance(item, dict):
+                    self._episodes.append(item)
 
     def record(self, snapshot: Dict[str, Any]) -> None:
         self._episodes.append(snapshot)
@@ -42,6 +48,10 @@ class MemorySystem:
             return
         try:
             self.path.parent.mkdir(parents=True, exist_ok=True)
-            self.path.write_text(json.dumps(self._episodes[-self.capacity:]))
+            payload = {
+                "capacity": self.capacity,
+                "episodes": self._episodes[-self.capacity:],
+            }
+            self.path.write_text(json.dumps(payload))
         except Exception:  # pragma: no cover - defensive
             pass

@@ -10,23 +10,25 @@
         "novelty": 0.0,
         "uncertainty": 0.0
       },
+      "timestamp": "2025-01-01T00:00:00+00:00",
       "motivational_state": {
-        "desire": 0.42000000000000004,
+        "desire": 0.42,
         "fear": 0.02,
         "valence": 0.4,
-        "tension": 0.008400000000000001,
+        "tension": 0.0084,
         "policy": "approach",
         "braid_code": 0
       },
       "archetypal_resonance": {
         "dominant_pattern": "Serpent of Stillness",
-        "serpent_activation": 0.5027150903873616,
-        "flame_activation": 0.48619637949090216,
-        "void_activation": 0.007949347133192649,
-        "unity_activation": 0.0031391829885435356,
+        "serpent_activation": 0.5027,
+        "flame_activation": 0.4862,
+        "void_activation": 0.0079,
+        "unity_activation": 0.0032,
         "resonance_mode": "flowing",
-        "harmonic_frequency": 0.008400000000000001
-      }
+        "harmonic_frequency": 0.0084
+      },
+      "content_hash": 3532763339
     }
   ]
 }

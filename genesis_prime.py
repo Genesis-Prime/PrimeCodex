@@ -10,7 +10,7 @@ This module provides essential prime number operations including:
 """
 
 import math
-from typing import List, Iterator, Set
+from typing import List, Set
 
 
 class GenesisPrime:
