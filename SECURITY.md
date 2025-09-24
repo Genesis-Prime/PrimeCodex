@@ -1,5 +1,7 @@
 # Security Policy
 
+> **Disclaimer:** PrimeCodex `0.2.0-beta` is experimental software provided without warranty. You assume all risks associated with operating, securing, or integrating this code—including any data loss, downtime, or security incidents that may result.
+
 ## Secret Management
 - Never commit secrets (API keys, tokens, credentials) to the repository.
 - Use a local `.env` file that is listed in `.gitignore`.

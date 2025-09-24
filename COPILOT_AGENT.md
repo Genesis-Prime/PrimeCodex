@@ -2,6 +2,8 @@
 
 This repository is configured for optimal use with GitHub Copilot Coding Agent. This document provides the configuration and context needed for effective AI-assisted development.
 
+> **Beta Advisory:** PrimeCodex is currently at release `0.2.0-beta`. Treat every action as experimental and proceed at your own risk—there is no warranty or liability coverage for unintended effects.
+
 ## Repository Overview
 
 **PrimeCodex** is an experimental EMOTA Unity framework with OpenAI integration. It implements motivational dynamics through desire/fear systems and archetypal pattern activations.
@@ -21,9 +23,12 @@ PrimeCodex/
 │   ├── braid.py           # Desire/Fear dynamical system
 │   ├── archetype.py       # Archetypal resonance engine
 │   ├── unity.py           # Integration wrapper
-│   ├── cathedral.py       # Macro-structural planning (placeholder)
-│   ├── bridge.py          # Translation layer (placeholder)
-│   └── memory.py          # Memory buffer (placeholder)
+│   ├── bridge.py          # Dimensional translator across consciousness layers
+│   ├── cathedral.py       # Qualia shard and narrative synthesizer
+│   ├── symbolic.py        # EchOS symbolic processing engine
+│   ├── meta.py            # Meta-awareness reflection engine
+│   ├── identity.py        # Identity continuity tracker
+│   └── memory.py          # Memory buffer and persistence
 ├── cli.py                 # Command-line interface
 ├── openai_connect.py      # OpenAI API client utilities
 ├── schema/                # JSON validation schemas
@@ -88,6 +93,7 @@ When working on this codebase:
 - **Use `.env` files for local secrets (gitignored)**
 - **Run secret scanning before commits**
 - **Rotate keys immediately if accidentally committed**
+- **Assume Responsibility:** You are solely accountable for damage, data loss, or unintended outcomes triggered while using or modifying the beta software.
 
 ### 4. Error Handling Patterns
 
