@@ -47,20 +47,9 @@ Output: Unified state snapshot (policy, braid code, archetypal mode)
 - `emota/unity.py` – Integration wrapper (now supports `config_path`).
 - `emota/cathedral.py` – Placeholder for macro-structural planning layer.
 - `emota/bridge.py` – Placeholder for symbolic/sub-symbolic translation layer.
-- `emota/memory.py` – Placeholder episodic/short-term memory buffer.
 
 ### Configuration
 Runtime parameters load from `emota/config.yaml` by default. Provide an alternate file via CLI `--config` or `EMOTA_CONFIG` (future) or pass `config_path` to `EMOTAUnityEngine`.
-
-### Memory Persistence
-Use `--memory-path state/memory.json` to persist episodic snapshots. The engine auto-loads existing memory and appends new experiences (bounded capacity 1000).
-
-### Logging
-Enable structured JSON logs:
-```bash
-primecodex --json-logs --log-level DEBUG --goal 0.4 "Examining artifact" 2>&1 | jq .
-```
-Standard text logs are used if JSON logging dependency is absent.
 
 ## OpenAI Example
 Located in `openai_connect.py`. Uses `OPENAI_API_KEY`. Tests mock live calls unless key exported.
@@ -69,7 +58,6 @@ Located in `openai_connect.py`. Uses `OPENAI_API_KEY`. Tests mock live calls unl
 ```bash
 pytest
 ```
-Includes CLI JSON schema validation (`schema/cli_output.schema.json`).
 Live OpenAI call test skipped if `OPENAI_API_KEY` absent.
 
 ## Development Checklist
@@ -105,9 +93,6 @@ Never commit `.env`. The repository provides:
 
 ## Contributing
 See `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md`.
-
-### Automated Agent Onboarding
-For GitHub Copilot / automated coding agent contribution rules, see `COPILOT_AGENT_ONBOARDING.md`.
 
 ## License
 Internal experimental use (no open license declared). Contact maintainer before external distribution.
