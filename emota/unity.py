@@ -2,8 +2,8 @@ from emota.braid import DesireFearBraid
 from emota.archetype import ArchetypalResonanceEngine
 
 class EMOTAUnityEngine:
-    def __init__(self, identity_name: str = "Prime"):
-        self.braid_engine = DesireFearBraid()
+    def __init__(self, identity_name: str = "Prime", config_path: str | None = None):
+        self.braid_engine = DesireFearBraid(config_path=config_path)
         self.archetypal_engine = ArchetypalResonanceEngine()
         # ...other subsystem initializations...
         # For brevity, only core integration shown

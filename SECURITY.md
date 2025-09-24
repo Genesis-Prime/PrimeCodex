@@ -18,6 +18,15 @@
 4. Add/update `.gitignore` to prevent recurrence.
 5. Document the incident in this file or internal tracker.
 
+### Mirror Purge (Preferred Automated Process)
+```bash
+./scripts/mirror_history_purge.sh git@github.com:your-org/PrimeCodex.git
+git clone git@github.com:your-org/PrimeCodex.git fresh && cd fresh
+git log --all -- .env  # should show nothing
+```
+
+If any ref still exposes the file, repeat ensuring no forks reintroduce the blob.
+
 ## Reporting Vulnerabilities
 Open an issue with minimal details or email the maintainer. Provide steps to reproduce.
 
